@@ -1,0 +1,16 @@
+ 1083  python scripts/fetch_natural_questions.py\n
+ 1084  pip install datasets\n
+ 1085  pip install datasets --break-system-packages\n
+ 1086  python -c "import datasets; print('datasets OK')"\n
+ 1087  python scripts/fetch_natural_questions.py\n
+ 1088  ls data/raw\n
+ 1089  nano .gitignore\n
+ 1090  git init\n
+ 1091  git commit -m "Week 1: RAG research environment setup complete"\n
+ 1092  rm Miniconda3-latest-MacOSX-arm64.sh\n
+ 1093  git commit -m "Week 1: RAG research environment setup complete"\n
+ 1094  git add .\n
+ 1095  git status\n
+ 1096  git commit -m "Week 1: RAG environment + datasets setup"\n
+ 1097  git branch -M main\ngit remote add origin https://github.com/notyourbeast/Evaluation_of_chunking_methods_in_RAG.git\ngit push -u origin main
+ 1098  python --version
