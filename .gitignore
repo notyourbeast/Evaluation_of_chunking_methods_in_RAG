@@ -1,18 +1,21 @@
+# Models
+models/*.gguf
+
 # Python
 __pycache__/
 *.pyc
-*.pyo
 
 # Conda
 .env
-.envs
+.conda/
 
-# Models
-models/
-
-# Huggingface cache
+# HuggingFace cache
+.cache/
 .cache/
 
-# Mac
+# OS
 .DS_Store
 
+# Data (optional)
+# Uncomment if you don't want datasets in GitHub
+# data/raw/
