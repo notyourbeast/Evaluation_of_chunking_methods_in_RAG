@@ -1,6 +1,7 @@
 import json
 import numpy as np
 import faiss
+import ollama
 
 from sentence_transformers import SentenceTransformer
 from llama_cpp import Llama
@@ -133,3 +134,47 @@ print("=" * 70)
 
 print(f"Retrieved {len(retrieved_chunks)} chunks.")
 print(f"Total context length: {len(context)} characters.")
+
+# ==========================================================
+# Build Prompt
+# ==========================================================
+
+prompt = f"""
+Use only the following context to answer the question.
+
+Context:
+{context}
+
+Question:
+{query}
+
+Answer:
+"""
+
+# ==========================================================
+# Generate Answer
+# ==========================================================
+
+print("\nGenerating answer with Mistral...\n")
+
+response = ollama.chat(
+    model="rag-mistral",
+    messages=[
+        {
+            "role": "user",
+            "content": prompt
+        }
+    ]
+)
+
+answer = response["message"]["content"]
+
+# ==========================================================
+# Display Answer
+# ==========================================================
+
+print("\n" + "=" * 70)
+print("Generated Answer")
+print("=" * 70)
+
+print(answer)
