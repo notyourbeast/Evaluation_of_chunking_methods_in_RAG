@@ -1,33 +1,61 @@
 import json
 import os
+import sys
+from pathlib import Path
+
 from transformers import AutoTokenizer
 
 
-INPUT_FILE = "data/raw/wiki_articles.json"
-OUTPUT_FILE = "data/processed/fixed_size/fixed_256_overlap32.json"
+# ==========================================================
+# Allow importing config.py from project root
+# ==========================================================
 
-CHUNK_SIZE = 256
-OVERLAP = 32
+sys.path.append(
+    str(Path(__file__).resolve().parent.parent)
+)
 
+
+from config import (
+    PROCESSED_DATA,
+    FIXED_CHUNK_FILE,
+    CHUNK_SIZE,
+    CHUNK_OVERLAP
+)
+
+
+# ==========================================================
+# Paths
+# ==========================================================
+
+INPUT_FILE = PROCESSED_DATA
+
+OUTPUT_FILE = FIXED_CHUNK_FILE
+
+OVERLAP = CHUNK_OVERLAP
+
+
+# ==========================================================
+# Load tokenizer
+# ==========================================================
 
 print("Loading tokenizer...")
+
 
 tokenizer = AutoTokenizer.from_pretrained(
     "sentence-transformers/all-MiniLM-L6-v2"
 )
 
 
-def create_chunks(text, title, article_id):
+# ==========================================================
+# Chunk creation
+# ==========================================================
 
-    # Tokenize without truncation.
-    # Long documents are intentionally split manually
-    # using our fixed chunking strategy.
-    tokens = tokenizer(
+def create_chunks(text, title, doc_id):
+
+    tokens = tokenizer.encode(
         text,
-        add_special_tokens=False,
-        truncation=False,
-        return_attention_mask=False
-    )["input_ids"]
+        add_special_tokens=False
+    )
 
 
     chunks = []
@@ -40,7 +68,9 @@ def create_chunks(text, title, article_id):
 
         end = start + CHUNK_SIZE
 
+
         chunk_tokens = tokens[start:end]
+
 
         chunk_text = tokenizer.decode(
             chunk_tokens,
@@ -50,16 +80,28 @@ def create_chunks(text, title, article_id):
 
         chunks.append(
             {
-                "article_id": article_id,
+                "doc_id": doc_id,
                 "title": title,
                 "source": "wikipedia",
-                "chunk_id": f"article{article_id:03d}_chunk{chunk_number:03d}",
+
+                "chunk_id":
+                    f"{doc_id}_chunk_{chunk_number:04d}",
+
                 "chunk_method": "fixed",
+
                 "chunk_size": CHUNK_SIZE,
+
                 "chunk_overlap": OVERLAP,
+
                 "start_token": start,
-                "end_token": min(end, len(tokens)),
+
+                "end_token": min(
+                    end,
+                    len(tokens)
+                ),
+
                 "token_count": len(chunk_tokens),
+
                 "text": chunk_text
             }
         )
@@ -74,52 +116,90 @@ def create_chunks(text, title, article_id):
 
 
 
-print("Loading Wikipedia corpus...")
+# ==========================================================
+# Load processed corpus
+# ==========================================================
+
+print("Loading processed corpus...")
 
 
-with open(INPUT_FILE, "r") as f:
-    articles = json.load(f)
+articles = []
 
+
+with open(
+    INPUT_FILE,
+    "r",
+    encoding="utf-8"
+) as f:
+
+    for line in f:
+
+        if line.strip():
+
+            articles.append(
+                json.loads(line)
+            )
+
+
+print(
+    f"Articles loaded: {len(articles)}"
+)
+
+
+
+# ==========================================================
+# Create chunks
+# ==========================================================
 
 all_chunks = []
 
 
-for article_id, article in enumerate(articles, start=1):
-
-    title = article["title"]
-    content = article["content"]
-
+for article in articles:
 
     chunks = create_chunks(
-        content,
-        title,
-        article_id
+        article["text"],
+        article["title"],
+        article["doc_id"]
     )
-
 
     all_chunks.extend(chunks)
 
 
 
-print("Total chunks:", len(all_chunks))
+print(
+    "Total chunks:",
+    len(all_chunks)
+)
 
 
-os.makedirs(
-    "data/processed",
+
+# ==========================================================
+# Save chunks
+# ==========================================================
+
+output_path = Path(OUTPUT_FILE)
+
+output_path.parent.mkdir(
+    parents=True,
     exist_ok=True
 )
 
 
 with open(
     OUTPUT_FILE,
-    "w"
+    "w",
+    encoding="utf-8"
 ) as f:
 
     json.dump(
         all_chunks,
         f,
-        indent=2
+        indent=2,
+        ensure_ascii=False
     )
 
 
-print("Saved:", OUTPUT_FILE)
+print(
+    "Saved:",
+    OUTPUT_FILE
+)

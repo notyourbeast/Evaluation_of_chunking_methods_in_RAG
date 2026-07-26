@@ -1,20 +1,26 @@
 import os
+import sys
+from pathlib import Path
+
 import numpy as np
 import faiss
 
 
 # ==========================================================
-# Paths
+# Add project root to Python path
 # ==========================================================
 
-INPUT_EMBEDDINGS = (
-    "data/processed/embeddings/fixed_256_embeddings.npy"
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+sys.path.append(
+    str(PROJECT_ROOT)
 )
 
-OUTPUT_INDEX = (
-    "models/fixed_256_faiss.index"
-)
 
+from config import (
+    FIXED_EMBEDDINGS,
+    FIXED_INDEX
+)
 
 # ==========================================================
 # Load embeddings
@@ -22,23 +28,40 @@ OUTPUT_INDEX = (
 
 print("Loading embeddings...")
 
-embeddings = np.load(INPUT_EMBEDDINGS)
+embeddings = np.load(
+    FIXED_EMBEDDINGS
+).astype("float32")
 
 
-print("Embedding shape:", embeddings.shape)
+print(
+    f"Embedding shape: {embeddings.shape}"
+)
 
 
 # ==========================================================
-# Create FAISS index
+# Normalize embeddings
 # ==========================================================
 
-print("Creating FAISS index...")
+print("Normalizing embeddings...")
 
+faiss.normalize_L2(
+    embeddings
+)
+
+
+# ==========================================================
+# Create FAISS Index
+# ==========================================================
 
 dimension = embeddings.shape[1]
 
 
-index = faiss.IndexFlatL2(
+print(
+    "Creating IndexFlatIP..."
+)
+
+
+index = faiss.IndexFlatIP(
     dimension
 )
 
@@ -47,7 +70,10 @@ index = faiss.IndexFlatL2(
 # Add vectors
 # ==========================================================
 
-print("Adding embeddings to index...")
+print(
+    "Adding embeddings to index..."
+)
+
 
 index.add(
     embeddings
@@ -55,29 +81,37 @@ index.add(
 
 
 print(
-    "Total vectors in index:",
-    index.ntotal
+    f"Total vectors: {index.ntotal}"
 )
 
 
 # ==========================================================
-# Save index
+# Save Index
 # ==========================================================
 
+index_directory = os.path.dirname(
+    FIXED_INDEX
+)
+
+
 os.makedirs(
-    "models",
+    index_directory,
     exist_ok=True
 )
 
 
 faiss.write_index(
     index,
-    OUTPUT_INDEX
+    FIXED_INDEX
 )
 
 
 print()
-print("==============================")
+
+print("=" * 40)
 print("FAISS index created successfully")
-print("Saved:", OUTPUT_INDEX)
-print("==============================")
+print("=" * 40)
+
+print(
+    f"Saved to: {FIXED_INDEX}"
+)

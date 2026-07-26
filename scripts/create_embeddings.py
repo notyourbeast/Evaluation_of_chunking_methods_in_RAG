@@ -1,22 +1,26 @@
 import json
 import os
+import sys
+from pathlib import Path
+
 import numpy as np
 
 from sentence_transformers import SentenceTransformer
 
 
-# ==========================================================
-# Paths
-# ==========================================================
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-INPUT_FILE = "data/processed/fixed_size/fixed_256_overlap32.json"
-
-OUTPUT_EMBEDDINGS = (
-    "data/processed/embeddings/fixed_256_embeddings.npy"
+sys.path.append(
+    str(PROJECT_ROOT)
 )
 
-OUTPUT_METADATA = (
-    "data/processed/embeddings/fixed_256_metadata.json"
+
+from config import (
+    FIXED_CHUNK_FILE,
+    FIXED_EMBEDDINGS,
+    FIXED_METADATA,
+    EMBEDDING_MODEL,
+    EMBEDDING_DIR
 )
 
 
@@ -27,18 +31,31 @@ OUTPUT_METADATA = (
 print("Loading embedding model...")
 
 model = SentenceTransformer(
-    "sentence-transformers/all-MiniLM-L6-v2"
+    EMBEDDING_MODEL
 )
+
+print("Embedding model loaded")
 
 
 # ==========================================================
 # Load chunks
 # ==========================================================
 
-print("Loading chunks...")
+print("\nLoading chunks...")
 
-with open(INPUT_FILE, "r") as f:
+with open(
+    FIXED_CHUNK_FILE,
+    "r",
+    encoding="utf-8"
+) as f:
+
     chunks = json.load(f)
+
+
+print(
+    "Chunks loaded:",
+    len(chunks)
+)
 
 
 texts = [
@@ -47,23 +64,26 @@ texts = [
 ]
 
 
-print(f"Loaded {len(texts)} chunks.")
-
-
 # ==========================================================
 # Generate embeddings
 # ==========================================================
 
-print("Generating embeddings...")
+print("\nGenerating embeddings...")
+
 
 embeddings = model.encode(
     texts,
+    batch_size=32,
     show_progress_bar=True,
-    convert_to_numpy=True
+    convert_to_numpy=True,
+    normalize_embeddings=True
 )
 
 
-print("Embedding shape:", embeddings.shape)
+print(
+    "Embedding shape:",
+    embeddings.shape
+)
 
 
 # ==========================================================
@@ -71,12 +91,13 @@ print("Embedding shape:", embeddings.shape)
 # ==========================================================
 
 os.makedirs(
-    "data/processed/embeddings",
+    EMBEDDING_DIR,
     exist_ok=True
 )
 
+
 np.save(
-    OUTPUT_EMBEDDINGS,
+    FIXED_EMBEDDINGS,
     embeddings
 )
 
@@ -87,42 +108,49 @@ np.save(
 
 metadata = []
 
+
 for chunk in chunks:
 
-    metadata.append({
-
-        "article_id": chunk["article_id"],
-        "title": chunk["title"],
-        "source": chunk["source"],
-        "chunk_id": chunk["chunk_id"],
-        "chunk_method": chunk["chunk_method"],
-        "chunk_size": chunk["chunk_size"],
-        "chunk_overlap": chunk["chunk_overlap"],
-        "start_token": chunk["start_token"],
-        "end_token": chunk["end_token"],
-        "token_count": chunk["token_count"]
-
-    })
+    metadata.append(
+        {
+            "doc_id": chunk["doc_id"],
+            "title": chunk["title"],
+            "source": chunk["source"],
+            "chunk_id": chunk["chunk_id"],
+            "chunk_method": chunk["chunk_method"],
+            "chunk_size": chunk["chunk_size"],
+            "chunk_overlap": chunk["chunk_overlap"],
+            "start_token": chunk["start_token"],
+            "end_token": chunk["end_token"],
+            "token_count": chunk["token_count"]
+        }
+    )
 
 
 with open(
-    OUTPUT_METADATA,
-    "w"
+    FIXED_METADATA,
+    "w",
+    encoding="utf-8"
 ) as f:
 
     json.dump(
         metadata,
         f,
-        indent=2
+        indent=2,
+        ensure_ascii=False
     )
 
 
-print()
+print("\n===================================")
+print("Embedding generation complete")
 print("===================================")
-print("Embedding generation complete.")
-print("Embeddings saved to:")
-print(OUTPUT_EMBEDDINGS)
-print()
-print("Metadata saved to:")
-print(OUTPUT_METADATA)
-print("===================================")
+
+print(
+    "Embeddings:",
+    FIXED_EMBEDDINGS
+)
+
+print(
+    "Metadata:",
+    FIXED_METADATA
+)

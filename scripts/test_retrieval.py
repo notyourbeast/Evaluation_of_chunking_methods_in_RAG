@@ -1,85 +1,120 @@
 import json
-import numpy as np
+import sys
+from pathlib import Path
+
 import faiss
 
 from sentence_transformers import SentenceTransformer
 
 
-# ==============================
-# Paths
-# ==============================
+# ==========================================================
+# Add project root to Python path
+# ==========================================================
 
-INDEX_FILE = "models/fixed_256_faiss.index"
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-METADATA_FILE = (
-    "data/processed/embeddings/fixed_256_metadata.json"
+sys.path.append(
+    str(PROJECT_ROOT)
 )
 
 
-# ==============================
-# Load FAISS
-# ==============================
+from config import (
+    FIXED_INDEX,
+    FIXED_METADATA,
+    EMBEDDING_MODEL,
+    TOP_K
+)
+
+
+# ==========================================================
+# Load FAISS Index
+# ==========================================================
 
 print("Loading FAISS index...")
 
 index = faiss.read_index(
-    INDEX_FILE
+    FIXED_INDEX
 )
 
-print("Vectors:", index.ntotal)
+
+print(
+    "Vectors:",
+    index.ntotal
+)
 
 
-# ==============================
-# Load metadata
-# ==============================
+# ==========================================================
+# Load Metadata
+# ==========================================================
 
-with open(METADATA_FILE, "r") as f:
+print("\nLoading metadata...")
+
+
+with open(
+    FIXED_METADATA,
+    "r",
+    encoding="utf-8"
+) as f:
+
     metadata = json.load(f)
 
 
-# ==============================
-# Load embedding model
-# ==============================
-
-print("Loading embedding model...")
-
-model = SentenceTransformer(
-    "sentence-transformers/all-MiniLM-L6-v2"
+print(
+    "Metadata records:",
+    len(metadata)
 )
 
 
-# ==============================
+# ==========================================================
+# Load Embedding Model
+# ==========================================================
+
+print("\nLoading embedding model...")
+
+
+model = SentenceTransformer(
+    EMBEDDING_MODEL
+)
+
+
+print(
+    "Embedding model loaded"
+)
+
+
+# ==========================================================
 # Query
-# ==============================
+# ==========================================================
 
-query = input("\nEnter your question: ")
+query = input(
+    "\nEnter your question: "
+)
 
 
-# ==============================
-# Create query embedding
-# ==============================
+# ==========================================================
+# Create Query Embedding
+# ==========================================================
 
 query_embedding = model.encode(
     [query],
-    convert_to_numpy=True
+    convert_to_numpy=True,
+    normalize_embeddings=True
 )
 
 
-# ==============================
-# Search
-# ==============================
+# ==========================================================
+# Search FAISS
+# ==========================================================
 
-k = 5
-
-distances, indices = index.search(
+scores, indices = index.search(
     query_embedding,
-    k
+    TOP_K
 )
 
 
-# ==============================
-# Display results
-# ==============================
+# ==========================================================
+# Display Results
+# ==========================================================
 
 print("\nTop Results\n")
 
@@ -88,18 +123,28 @@ for rank, idx in enumerate(indices[0], start=1):
 
     print("=" * 60)
 
-    print("Rank:", rank)
-    print("Distance:", distances[0][rank-1])
+    print(
+        "Rank:",
+        rank
+    )
 
-    print("Title:",
-          metadata[idx]["title"])
+    print(
+        "Score:",
+        scores[0][rank - 1]
+    )
 
-    print("Chunk ID:",
-          metadata[idx]["chunk_id"])
+    print(
+        "Title:",
+        metadata[idx]["title"]
+    )
+
+    print(
+        "Chunk ID:",
+        metadata[idx]["chunk_id"]
+    )
 
     print()
 
     print(
         metadata[idx]
     )
-

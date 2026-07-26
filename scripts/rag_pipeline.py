@@ -1,164 +1,289 @@
 import json
-import numpy as np
+import sys
+from pathlib import Path
+
 import faiss
 import ollama
 
 from sentence_transformers import SentenceTransformer
-from llama_cpp import Llama
+
 
 # ==========================================================
-# Paths
+# Add project root to Python path
 # ==========================================================
 
-INDEX_FILE = "models/fixed_256_faiss.index"
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
-METADATA_FILE = (
-    "data/processed/embeddings/fixed_256_metadata.json"
+sys.path.append(
+    str(PROJECT_ROOT)
 )
 
-CHUNK_FILE = (
-    "data/processed/fixed_size/fixed_256_overlap32.json"
+
+from config import (
+    FIXED_INDEX,
+    FIXED_METADATA,
+    FIXED_CHUNK_FILE,
+    EMBEDDING_MODEL,
+    OLLAMA_MODEL,
+    TOP_K
 )
 
-MODEL_PATH = (
-    "models/mistral-7b-instruct-v0.2.Q4_K_M.gguf"
-)
 
 # ==========================================================
-# Load FAISS
+# Load FAISS Index
 # ==========================================================
 
 print("Loading FAISS index...")
 
 index = faiss.read_index(
-    INDEX_FILE
+    FIXED_INDEX
 )
 
-print("Vectors:", index.ntotal)
+print(
+    f"FAISS vectors: {index.ntotal}"
+)
+
 
 # ==========================================================
-# Load metadata
+# Load Metadata
 # ==========================================================
 
-print("Loading metadata...")
+print("\nLoading metadata...")
 
-with open(METADATA_FILE, "r") as f:
+
+with open(
+    FIXED_METADATA,
+    "r",
+    encoding="utf-8"
+) as f:
+
     metadata = json.load(f)
 
-print("Metadata records:", len(metadata))
+
+print(
+    f"Metadata records: {len(metadata)}"
+)
+
 
 # ==========================================================
-# Load chunk data
+# Validate Index Consistency
 # ==========================================================
 
-print("Loading chunk data...")
+if index.ntotal != len(metadata):
 
-with open(CHUNK_FILE, "r") as f:
+    raise ValueError(
+        f"FAISS index contains {index.ntotal} vectors "
+        f"but metadata contains {len(metadata)} records."
+    )
+
+
+# ==========================================================
+# Load Chunks
+# ==========================================================
+
+print("\nLoading chunks...")
+
+
+with open(
+    FIXED_CHUNK_FILE,
+    "r",
+    encoding="utf-8"
+) as f:
+
     chunks = json.load(f)
 
-print("Chunks:", len(chunks))
+
+print(
+    f"Chunk records: {len(chunks)}"
+)
+
+
+if len(chunks) != len(metadata):
+
+    raise ValueError(
+        f"Chunk file contains {len(chunks)} records "
+        f"but metadata contains {len(metadata)}."
+    )
+
 
 # ==========================================================
-# Load embedding model
+# Load Embedding Model
 # ==========================================================
 
-print("Loading embedding model...")
+print("\nLoading embedding model...")
+
 
 embedding_model = SentenceTransformer(
-    "sentence-transformers/all-MiniLM-L6-v2"
+    EMBEDDING_MODEL
 )
+
+
+print(
+    "Embedding model loaded"
+)
+
 
 # ==========================================================
 # User Query
 # ==========================================================
 
-query = input("\nEnter your question: ")
+query = input(
+    "\nEnter your question: "
+).strip()
+
+
+if not query:
+
+    raise ValueError(
+        "Question cannot be empty."
+    )
 
 
 # ==========================================================
-# Create Query Embedding
+# Generate Query Embedding
 # ==========================================================
 
 query_embedding = embedding_model.encode(
     [query],
-    convert_to_numpy=True
+    convert_to_numpy=True,
+    normalize_embeddings=True
 )
 
 
 # ==========================================================
-# Retrieve Top-k Chunks
+# Retrieve Top-K Chunks
 # ==========================================================
 
-TOP_K = 5
-
-distances, indices = index.search(
+scores, indices = index.search(
     query_embedding,
     TOP_K
 )
 
+
 # ==========================================================
-# Build Context
+# Display Retrieved Chunks
 # ==========================================================
 
 retrieved_chunks = []
+
 
 print("\n")
 print("=" * 70)
 print("Retrieved Chunks")
 print("=" * 70)
 
+
 for rank, idx in enumerate(indices[0], start=1):
 
     chunk = chunks[idx]
 
-    retrieved_chunks.append(chunk["text"])
+    retrieved_chunks.append(
+        chunk["text"]
+    )
 
-    print(f"\nRank {rank}")
-    print(f"Distance : {distances[0][rank-1]:.4f}")
-    print(f"Title    : {chunk['title']}")
-    print(f"Chunk ID : {chunk['chunk_id']}")
+
+    print()
+
+    print(
+        f"Rank      : {rank}"
+    )
+
+    print(
+        f"Score     : {scores[0][rank-1]:.4f}"
+    )
+
+    print(
+        f"Title     : {chunk['title']}"
+    )
+
+    print(
+        f"Document  : {chunk['doc_id']}"
+    )
+
+    print(
+        f"Chunk ID  : {chunk['chunk_id']}"
+    )
+
+    print(
+        f"Tokens    : {chunk['token_count']}"
+    )
+
     print("-" * 70)
-    print(chunk["text"][:500])
-    print("...")
-    
-    # ==========================================================
-# Combine Retrieved Context
+
+    preview = chunk["text"][:500].replace(
+        "\n",
+        " "
+    )
+
+    print(preview)
+
+    if len(chunk["text"]) > 500:
+        print("...")
+
+
+# ==========================================================
+# Build Context
 # ==========================================================
 
-context = "\n\n".join(retrieved_chunks)
+context = "\n\n".join(
+    retrieved_chunks
+)
+
 
 print("\n")
 print("=" * 70)
 print("Context Ready")
 print("=" * 70)
 
-print(f"Retrieved {len(retrieved_chunks)} chunks.")
-print(f"Total context length: {len(context)} characters.")
+print(
+    f"Chunks retrieved : {len(retrieved_chunks)}"
+)
+
+print(
+    f"Context length   : {len(context):,} characters"
+)
+
 
 # ==========================================================
-# Build Prompt
+# Prompt
 # ==========================================================
 
 prompt = f"""
-Use only the following context to answer the question.
+You are a Retrieval-Augmented Generation (RAG) assistant.
+
+Answer the question using ONLY the retrieved context below.
+
+If the answer cannot be determined from the context,
+respond exactly:
+
+"I do not have enough information in the retrieved context."
+
+Do not invent facts.
+Do not use outside knowledge.
 
 Context:
+
 {context}
 
 Question:
+
 {query}
 
 Answer:
 """
 
+
 # ==========================================================
-# Generate Answer
+# Generate Response
 # ==========================================================
 
-print("\nGenerating answer with Mistral...\n")
+print(
+    "\nGenerating answer using Ollama...\n"
+)
+
 
 response = ollama.chat(
-    model="rag-mistral",
+    model=OLLAMA_MODEL,
     messages=[
         {
             "role": "user",
@@ -167,13 +292,16 @@ response = ollama.chat(
     ]
 )
 
+
 answer = response["message"]["content"]
 
+
 # ==========================================================
-# Display Answer
+# Output
 # ==========================================================
 
-print("\n" + "=" * 70)
+print("\n")
+print("=" * 70)
 print("Generated Answer")
 print("=" * 70)
 
