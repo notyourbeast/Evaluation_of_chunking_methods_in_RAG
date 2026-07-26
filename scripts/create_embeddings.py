@@ -1,3 +1,4 @@
+import argparse
 import json
 import os
 import sys
@@ -8,6 +9,10 @@ import numpy as np
 from sentence_transformers import SentenceTransformer
 
 
+# ==========================================================
+# Add project root
+# ==========================================================
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 sys.path.append(
@@ -16,141 +21,205 @@ sys.path.append(
 
 
 from config import (
-    FIXED_CHUNK_FILE,
-    FIXED_EMBEDDINGS,
-    FIXED_METADATA,
+    CHUNK_OUTPUTS,
+    EMBEDDING_OUTPUTS,
+    METADATA_OUTPUTS,
     EMBEDDING_MODEL,
     EMBEDDING_DIR
 )
 
-
-# ==========================================================
-# Load embedding model
-# ==========================================================
-
-print("Loading embedding model...")
-
-model = SentenceTransformer(
-    EMBEDDING_MODEL
-)
-
-print("Embedding model loaded")
 
 
 # ==========================================================
 # Load chunks
 # ==========================================================
 
-print("\nLoading chunks...")
+def load_chunks(path):
 
-with open(
-    FIXED_CHUNK_FILE,
-    "r",
-    encoding="utf-8"
-) as f:
+    with open(
+        path,
+        "r",
+        encoding="utf-8"
+    ) as f:
 
-    chunks = json.load(f)
+        return json.load(f)
 
-
-print(
-    "Chunks loaded:",
-    len(chunks)
-)
-
-
-texts = [
-    chunk["text"]
-    for chunk in chunks
-]
 
 
 # ==========================================================
-# Generate embeddings
+# Create embeddings
 # ==========================================================
 
-print("\nGenerating embeddings...")
+def main(strategy):
 
 
-embeddings = model.encode(
-    texts,
-    batch_size=32,
-    show_progress_bar=True,
-    convert_to_numpy=True,
-    normalize_embeddings=True
-)
+    if strategy not in CHUNK_OUTPUTS:
+
+        raise ValueError(
+            f"Unsupported strategy: {strategy}"
+        )
 
 
-print(
-    "Embedding shape:",
-    embeddings.shape
-)
+    chunk_file = CHUNK_OUTPUTS[strategy]
+
+    embedding_file = EMBEDDING_OUTPUTS[strategy]
+
+    metadata_file = METADATA_OUTPUTS[strategy]
 
 
-# ==========================================================
-# Save embeddings
-# ==========================================================
 
-os.makedirs(
-    EMBEDDING_DIR,
-    exist_ok=True
-)
+    print("Loading embedding model...")
 
 
-np.save(
-    FIXED_EMBEDDINGS,
-    embeddings
-)
-
-
-# ==========================================================
-# Save metadata
-# ==========================================================
-
-metadata = []
-
-
-for chunk in chunks:
-
-    metadata.append(
-        {
-            "doc_id": chunk["doc_id"],
-            "title": chunk["title"],
-            "source": chunk["source"],
-            "chunk_id": chunk["chunk_id"],
-            "chunk_method": chunk["chunk_method"],
-            "chunk_size": chunk["chunk_size"],
-            "chunk_overlap": chunk["chunk_overlap"],
-            "start_token": chunk["start_token"],
-            "end_token": chunk["end_token"],
-            "token_count": chunk["token_count"]
-        }
+    model = SentenceTransformer(
+        EMBEDDING_MODEL
     )
 
 
-with open(
-    FIXED_METADATA,
-    "w",
-    encoding="utf-8"
-) as f:
+    print("Embedding model loaded")
 
-    json.dump(
-        metadata,
-        f,
-        indent=2,
-        ensure_ascii=False
+
+    print("\nLoading chunks...")
+
+
+    chunks = load_chunks(
+        chunk_file
     )
 
 
-print("\n===================================")
-print("Embedding generation complete")
-print("===================================")
+    print(
+        "Strategy:",
+        strategy
+    )
 
-print(
-    "Embeddings:",
-    FIXED_EMBEDDINGS
-)
 
-print(
-    "Metadata:",
-    FIXED_METADATA
-)
+    print(
+        "Chunks loaded:",
+        len(chunks)
+    )
+
+
+    texts = [
+        chunk["text"]
+        for chunk in chunks
+    ]
+
+
+
+    print("\nGenerating embeddings...")
+
+
+    embeddings = model.encode(
+        texts,
+        batch_size=32,
+        show_progress_bar=True,
+        convert_to_numpy=True,
+        normalize_embeddings=True
+    )
+
+
+    print(
+        "Embedding shape:",
+        embeddings.shape
+    )
+
+
+
+    # ======================================================
+    # Save embeddings
+    # ======================================================
+
+    os.makedirs(
+        EMBEDDING_DIR,
+        exist_ok=True
+    )
+
+
+    np.save(
+        embedding_file,
+        embeddings
+    )
+
+
+
+    # ======================================================
+    # Save metadata
+    # ======================================================
+
+    metadata = []
+
+
+    for chunk in chunks:
+
+        metadata.append(
+            {
+                "doc_id": chunk["doc_id"],
+                "title": chunk["title"],
+                "source": chunk["source"],
+                "chunk_id": chunk["chunk_id"],
+                "chunk_method": chunk["chunk_method"],
+                "chunk_size": chunk["chunk_size"],
+                "chunk_overlap": chunk["chunk_overlap"],
+                "start_token": chunk["start_token"],
+                "end_token": chunk["end_token"],
+                "token_count": chunk["token_count"]
+            }
+        )
+
+
+
+    with open(
+        metadata_file,
+        "w",
+        encoding="utf-8"
+    ) as f:
+
+        json.dump(
+            metadata,
+            f,
+            indent=2,
+            ensure_ascii=False
+        )
+
+
+
+    print("\n===================================")
+    print("Embedding generation complete")
+    print("===================================")
+
+    print(
+        "Embeddings:",
+        embedding_file
+    )
+
+    print(
+        "Metadata:",
+        metadata_file
+    )
+
+
+
+if __name__ == "__main__":
+
+
+    parser = argparse.ArgumentParser()
+
+
+    parser.add_argument(
+        "--strategy",
+        required=True,
+        choices=[
+            "fixed",
+            "sentence",
+            "semantic",
+            "topic"
+        ]
+    )
+
+
+    args = parser.parse_args()
+
+
+    main(
+        args.strategy
+    )

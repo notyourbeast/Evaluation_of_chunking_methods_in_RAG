@@ -1,3 +1,4 @@
+import argparse
 import os
 import sys
 from pathlib import Path
@@ -7,7 +8,7 @@ import faiss
 
 
 # ==========================================================
-# Add project root to Python path
+# Add project root
 # ==========================================================
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -18,100 +19,164 @@ sys.path.append(
 
 
 from config import (
-    FIXED_EMBEDDINGS,
-    FIXED_INDEX
+    EMBEDDING_OUTPUTS,
+    INDEX_OUTPUTS
 )
 
-# ==========================================================
-# Load embeddings
-# ==========================================================
-
-print("Loading embeddings...")
-
-embeddings = np.load(
-    FIXED_EMBEDDINGS
-).astype("float32")
-
-
-print(
-    f"Embedding shape: {embeddings.shape}"
-)
 
 
 # ==========================================================
-# Normalize embeddings
+# Build FAISS index
 # ==========================================================
 
-print("Normalizing embeddings...")
+def main(strategy):
 
-faiss.normalize_L2(
-    embeddings
-)
+
+    if strategy not in EMBEDDING_OUTPUTS:
+
+        raise ValueError(
+            f"Unsupported strategy: {strategy}"
+        )
+
+
+    embedding_file = EMBEDDING_OUTPUTS[strategy]
+
+    index_file = INDEX_OUTPUTS[strategy]
+
+
+
+    # ======================================================
+    # Load embeddings
+    # ======================================================
+
+    print("Loading embeddings...")
+
+
+    embeddings = np.load(
+        embedding_file
+    ).astype("float32")
+
+
+    print(
+        "Embedding shape:",
+        embeddings.shape
+    )
+
+
+
+    # ======================================================
+    # Normalize
+    # ======================================================
+
+    print(
+        "Normalizing embeddings..."
+    )
+
+
+    faiss.normalize_L2(
+        embeddings
+    )
+
+
+
+    # ======================================================
+    # Create FAISS index
+    # ======================================================
+
+    dimension = embeddings.shape[1]
+
+
+    print(
+        "Creating IndexFlatIP..."
+    )
+
+
+    index = faiss.IndexFlatIP(
+        dimension
+    )
+
+
+
+    # ======================================================
+    # Add vectors
+    # ======================================================
+
+    print(
+        "Adding embeddings to index..."
+    )
+
+
+    index.add(
+        embeddings
+    )
+
+
+    print(
+        "Total vectors:",
+        index.ntotal
+    )
+
+
+
+    # ======================================================
+    # Save index
+    # ======================================================
+
+    os.makedirs(
+        os.path.dirname(index_file),
+        exist_ok=True
+    )
+
+
+    faiss.write_index(
+        index,
+        index_file
+    )
+
+
+    print()
+
+    print("=" * 40)
+    print("FAISS index created successfully")
+    print("=" * 40)
+
+    print(
+        "Strategy:",
+        strategy
+    )
+
+    print(
+        "Saved:",
+        index_file
+    )
+
 
 
 # ==========================================================
-# Create FAISS Index
+# CLI
 # ==========================================================
 
-dimension = embeddings.shape[1]
+if __name__ == "__main__":
 
 
-print(
-    "Creating IndexFlatIP..."
-)
+    parser = argparse.ArgumentParser()
 
 
-index = faiss.IndexFlatIP(
-    dimension
-)
+    parser.add_argument(
+        "--strategy",
+        required=True,
+        choices=[
+            "fixed",
+            "sentence",
+            "semantic",
+            "topic"
+        ]
+    )
 
 
-# ==========================================================
-# Add vectors
-# ==========================================================
-
-print(
-    "Adding embeddings to index..."
-)
+    args = parser.parse_args()
 
 
-index.add(
-    embeddings
-)
-
-
-print(
-    f"Total vectors: {index.ntotal}"
-)
-
-
-# ==========================================================
-# Save Index
-# ==========================================================
-
-index_directory = os.path.dirname(
-    FIXED_INDEX
-)
-
-
-os.makedirs(
-    index_directory,
-    exist_ok=True
-)
-
-
-faiss.write_index(
-    index,
-    FIXED_INDEX
-)
-
-
-print()
-
-print("=" * 40)
-print("FAISS index created successfully")
-print("=" * 40)
-
-print(
-    f"Saved to: {FIXED_INDEX}"
-)
+    main(
+        args.strategy
+    )

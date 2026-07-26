@@ -1,3 +1,4 @@
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -8,7 +9,7 @@ from sentence_transformers import SentenceTransformer
 
 
 # ==========================================================
-# Add project root to Python path
+# Add project root
 # ==========================================================
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -19,132 +20,224 @@ sys.path.append(
 
 
 from config import (
-    FIXED_INDEX,
-    FIXED_METADATA,
     EMBEDDING_MODEL,
+    INDEX_OUTPUTS,
+    METADATA_OUTPUTS,
     TOP_K
 )
 
 
-# ==========================================================
-# Load FAISS Index
-# ==========================================================
-
-print("Loading FAISS index...")
-
-index = faiss.read_index(
-    FIXED_INDEX
-)
-
-
-print(
-    "Vectors:",
-    index.ntotal
-)
-
 
 # ==========================================================
-# Load Metadata
+# Retrieval Test
 # ==========================================================
 
-print("\nLoading metadata...")
+def main(strategy):
 
 
-with open(
-    FIXED_METADATA,
-    "r",
-    encoding="utf-8"
-) as f:
+    if strategy not in INDEX_OUTPUTS:
 
-    metadata = json.load(f)
+        raise ValueError(
+            f"Unsupported strategy: {strategy}"
+        )
 
 
-print(
-    "Metadata records:",
-    len(metadata)
-)
+    index_file = INDEX_OUTPUTS[strategy]
+
+    metadata_file = METADATA_OUTPUTS[strategy]
 
 
-# ==========================================================
-# Load Embedding Model
-# ==========================================================
 
-print("\nLoading embedding model...")
+    # ======================================================
+    # Load FAISS
+    # ======================================================
 
-
-model = SentenceTransformer(
-    EMBEDDING_MODEL
-)
+    print("Loading FAISS index...")
 
 
-print(
-    "Embedding model loaded"
-)
+    index = faiss.read_index(
+        index_file
+    )
 
 
-# ==========================================================
-# Query
-# ==========================================================
-
-query = input(
-    "\nEnter your question: "
-)
+    print(
+        "Vectors:",
+        index.ntotal
+    )
 
 
-# ==========================================================
-# Create Query Embedding
-# ==========================================================
 
-query_embedding = model.encode(
-    [query],
-    convert_to_numpy=True,
-    normalize_embeddings=True
-)
+    # ======================================================
+    # Load Metadata
+    # ======================================================
+
+    print("\nLoading metadata...")
 
 
-# ==========================================================
-# Search FAISS
-# ==========================================================
+    with open(
+        metadata_file,
+        "r",
+        encoding="utf-8"
+    ) as f:
 
-scores, indices = index.search(
-    query_embedding,
-    TOP_K
-)
-
-
-# ==========================================================
-# Display Results
-# ==========================================================
-
-print("\nTop Results\n")
+        metadata = json.load(f)
 
 
-for rank, idx in enumerate(indices[0], start=1):
 
+    print(
+        "Metadata records:",
+        len(metadata)
+    )
+
+
+
+    if index.ntotal != len(metadata):
+
+        raise ValueError(
+            "FAISS vectors and metadata count do not match"
+        )
+
+
+
+    # ======================================================
+    # Load embedding model
+    # ======================================================
+
+    print("\nLoading embedding model...")
+
+
+    model = SentenceTransformer(
+        EMBEDDING_MODEL
+    )
+
+
+    print(
+        "Embedding model loaded"
+    )
+
+
+
+    # ======================================================
+    # Query
+    # ======================================================
+
+    query = input(
+        "\nEnter your question: "
+    ).strip()
+
+
+    if not query:
+
+        raise ValueError(
+            "Query cannot be empty"
+        )
+
+
+
+    # ======================================================
+    # Encode query
+    # ======================================================
+
+    query_embedding = model.encode(
+        [query],
+        convert_to_numpy=True,
+        normalize_embeddings=True
+    )
+
+
+
+    # ======================================================
+    # Search
+    # ======================================================
+
+    scores, indices = index.search(
+        query_embedding,
+        TOP_K
+    )
+
+
+
+    # ======================================================
+    # Display results
+    # ======================================================
+
+    print("\n")
+    print("=" * 60)
+    print("Top Results")
     print("=" * 60)
 
     print(
-        "Rank:",
-        rank
+        "Strategy:",
+        strategy
     )
 
-    print(
-        "Score:",
-        scores[0][rank - 1]
+
+    for rank, idx in enumerate(
+        indices[0],
+        start=1
+    ):
+
+
+        print("=" * 60)
+
+        print(
+            "Rank:",
+            rank
+        )
+
+
+        print(
+            "Score:",
+            scores[0][rank-1]
+        )
+
+
+        print(
+            "Title:",
+            metadata[idx]["title"]
+        )
+
+
+        print(
+            "Chunk ID:",
+            metadata[idx]["chunk_id"]
+        )
+
+
+        print(
+            "Chunk method:",
+            metadata[idx]["chunk_method"]
+        )
+
+
+        print(
+            "Token count:",
+            metadata[idx]["token_count"]
+        )
+
+
+
+if __name__ == "__main__":
+
+
+    parser = argparse.ArgumentParser()
+
+
+    parser.add_argument(
+        "--strategy",
+        required=True,
+        choices=[
+            "fixed",
+            "sentence",
+            "semantic",
+            "topic"
+        ]
     )
 
-    print(
-        "Title:",
-        metadata[idx]["title"]
-    )
 
-    print(
-        "Chunk ID:",
-        metadata[idx]["chunk_id"]
-    )
+    args = parser.parse_args()
 
-    print()
 
-    print(
-        metadata[idx]
+    main(
+        args.strategy
     )
