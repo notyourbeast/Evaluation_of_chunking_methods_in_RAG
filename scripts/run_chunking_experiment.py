@@ -27,6 +27,11 @@ from chunkers.sentence_chunker import (
 )
 
 
+from chunkers.semantic_chunker import (
+    create_semantic_chunks
+)
+
+
 
 def load_documents(path):
 
@@ -73,6 +78,11 @@ def main(strategy):
     elif strategy == "sentence":
 
         chunk_function = create_sentence_chunks
+
+
+    elif strategy == "semantic":
+
+        chunk_function = create_semantic_chunks
 
 
     else:
@@ -152,7 +162,8 @@ if __name__ == "__main__":
         required=True,
         choices=[
             "fixed",
-            "sentence"
+            "sentence",
+            "semantic"
         ]
     )
 
