@@ -16,6 +16,12 @@ __pycache__/
 # OS
 .DS_Store
 
+# Generated embeddings
+data/processed/embeddings/*.npy
+
+# Generated FAISS indexes
+models/*.index
+
 # Data (optional)
 # Uncomment if you don't want datasets in GitHub
 # data/raw/

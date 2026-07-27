@@ -1,3 +1,4 @@
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -20,9 +21,9 @@ sys.path.append(
 
 
 from config import (
-    FIXED_INDEX,
-    FIXED_METADATA,
-    FIXED_CHUNK_FILE,
+    CHUNK_OUTPUTS,
+    INDEX_OUTPUTS,
+    METADATA_OUTPUTS,
     EMBEDDING_MODEL,
     OLLAMA_MODEL,
     TOP_K
@@ -30,18 +31,78 @@ from config import (
 
 
 # ==========================================================
+# Arguments
+# ==========================================================
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument(
+    "--strategy",
+    required=True,
+    choices=[
+        "fixed",
+        "sentence",
+        "semantic",
+        "topic"
+    ]
+)
+
+
+args = parser.parse_args()
+
+strategy = args.strategy
+
+
+
+# ==========================================================
+# Select experiment files
+# ==========================================================
+
+INDEX_FILE = INDEX_OUTPUTS[strategy]
+
+METADATA_FILE = METADATA_OUTPUTS[strategy]
+
+CHUNK_FILE = CHUNK_OUTPUTS[strategy]
+
+
+print()
+print("=" * 70)
+print("RAG Experiment")
+print("=" * 70)
+
+print(
+    "Strategy:",
+    strategy
+)
+
+print(
+    "Index:",
+    INDEX_FILE
+)
+
+print(
+    "Chunks:",
+    CHUNK_FILE
+)
+
+
+
+# ==========================================================
 # Load FAISS Index
 # ==========================================================
 
-print("Loading FAISS index...")
+print("\nLoading FAISS index...")
+
 
 index = faiss.read_index(
-    FIXED_INDEX
+    INDEX_FILE
 )
+
 
 print(
     f"FAISS vectors: {index.ntotal}"
 )
+
 
 
 # ==========================================================
@@ -52,7 +113,7 @@ print("\nLoading metadata...")
 
 
 with open(
-    FIXED_METADATA,
+    METADATA_FILE,
     "r",
     encoding="utf-8"
 ) as f:
@@ -65,16 +126,18 @@ print(
 )
 
 
+
 # ==========================================================
-# Validate Index Consistency
+# Validate Index
 # ==========================================================
 
 if index.ntotal != len(metadata):
 
     raise ValueError(
-        f"FAISS index contains {index.ntotal} vectors "
-        f"but metadata contains {len(metadata)} records."
+        f"FAISS vectors ({index.ntotal}) "
+        f"do not match metadata ({len(metadata)})"
     )
+
 
 
 # ==========================================================
@@ -85,7 +148,7 @@ print("\nLoading chunks...")
 
 
 with open(
-    FIXED_CHUNK_FILE,
+    CHUNK_FILE,
     "r",
     encoding="utf-8"
 ) as f:
@@ -98,12 +161,14 @@ print(
 )
 
 
+
 if len(chunks) != len(metadata):
 
     raise ValueError(
-        f"Chunk file contains {len(chunks)} records "
-        f"but metadata contains {len(metadata)}."
+        f"Chunks ({len(chunks)}) "
+        f"do not match metadata ({len(metadata)})"
     )
+
 
 
 # ==========================================================
@@ -123,8 +188,9 @@ print(
 )
 
 
+
 # ==========================================================
-# User Query
+# Query
 # ==========================================================
 
 query = input(
@@ -135,12 +201,13 @@ query = input(
 if not query:
 
     raise ValueError(
-        "Question cannot be empty."
+        "Question cannot be empty"
     )
 
 
+
 # ==========================================================
-# Generate Query Embedding
+# Query Embedding
 # ==========================================================
 
 query_embedding = embedding_model.encode(
@@ -150,14 +217,16 @@ query_embedding = embedding_model.encode(
 )
 
 
+
 # ==========================================================
-# Retrieve Top-K Chunks
+# Retrieval
 # ==========================================================
 
 scores, indices = index.search(
     query_embedding,
     TOP_K
 )
+
 
 
 # ==========================================================
@@ -173,9 +242,14 @@ print("Retrieved Chunks")
 print("=" * 70)
 
 
-for rank, idx in enumerate(indices[0], start=1):
+
+for rank, idx in enumerate(
+    indices[0],
+    start=1
+):
 
     chunk = chunks[idx]
+
 
     retrieved_chunks.append(
         chunk["text"]
@@ -197,11 +271,11 @@ for rank, idx in enumerate(indices[0], start=1):
     )
 
     print(
-        f"Document  : {chunk['doc_id']}"
+        f"Chunk ID  : {chunk['chunk_id']}"
     )
 
     print(
-        f"Chunk ID  : {chunk['chunk_id']}"
+        f"Method    : {chunk['chunk_method']}"
     )
 
     print(
@@ -210,19 +284,16 @@ for rank, idx in enumerate(indices[0], start=1):
 
     print("-" * 70)
 
-    preview = chunk["text"][:500].replace(
-        "\n",
-        " "
+    print(
+        chunk["text"][:500]
     )
 
-    print(preview)
+    print("...")
 
-    if len(chunk["text"]) > 500:
-        print("...")
 
 
 # ==========================================================
-# Build Context
+# Context
 # ==========================================================
 
 context = "\n\n".join(
@@ -235,13 +306,16 @@ print("=" * 70)
 print("Context Ready")
 print("=" * 70)
 
+
 print(
     f"Chunks retrieved : {len(retrieved_chunks)}"
 )
 
+
 print(
     f"Context length   : {len(context):,} characters"
 )
+
 
 
 # ==========================================================
@@ -258,23 +332,26 @@ respond exactly:
 
 "I do not have enough information in the retrieved context."
 
-Do not invent facts.
 Do not use outside knowledge.
+Do not invent facts.
 
 Context:
 
 {context}
 
+
 Question:
 
 {query}
+
 
 Answer:
 """
 
 
+
 # ==========================================================
-# Generate Response
+# Generate Answer
 # ==========================================================
 
 print(
@@ -283,7 +360,9 @@ print(
 
 
 response = ollama.chat(
+
     model=OLLAMA_MODEL,
+
     messages=[
         {
             "role": "user",
@@ -294,6 +373,7 @@ response = ollama.chat(
 
 
 answer = response["message"]["content"]
+
 
 
 # ==========================================================
