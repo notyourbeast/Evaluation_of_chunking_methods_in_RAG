@@ -12,7 +12,8 @@ CHUNK_SIZE = 256
 
 MIN_CHUNK_SIZE = 100
 
-SIMILARITY_THRESHOLD = 0.25
+# Proposal-aligned semantic similarity threshold
+SIMILARITY_THRESHOLD = 0.75
 
 MODEL_MAX_TOKENS = 256
 
@@ -104,6 +105,7 @@ def split_long_sentence(sentence):
             ]
 
 
+
     if current_words:
 
         segments.append(
@@ -167,11 +169,13 @@ def create_semantic_chunks(text, title, doc_id):
     doc = nlp(text)
 
 
+
     raw_sentences = [
         sent.text.strip()
         for sent in doc.sents
         if sent.text.strip()
     ]
+
 
 
     sentences = []
@@ -182,6 +186,7 @@ def create_semantic_chunks(text, title, doc_id):
         sentences.extend(
             split_long_sentence(sentence)
         )
+
 
 
     if not sentences:
@@ -250,7 +255,9 @@ def create_semantic_chunks(text, title, doc_id):
         boundary = False
 
 
+
         if i > 0:
+
 
             similarity = cosine_similarity(
                 [
@@ -268,11 +275,11 @@ def create_semantic_chunks(text, title, doc_id):
 
 
 
-        # Semantic boundary
         if (
             boundary
             and current_tokens >= MIN_CHUNK_SIZE
         ):
+
 
             save_chunk(
                 chunks,
@@ -295,14 +302,11 @@ def create_semantic_chunks(text, title, doc_id):
 
 
 
-        # ==================================================
-        # Enforce maximum chunk size
-        # ==================================================
-
         if (
             current_tokens + sentence_tokens > CHUNK_SIZE
             and current_sentences
         ):
+
 
             save_chunk(
                 chunks,
@@ -334,11 +338,8 @@ def create_semantic_chunks(text, title, doc_id):
 
 
 
-    # ======================================================
-    # Remaining chunk
-    # ======================================================
-
     if current_sentences:
+
 
         save_chunk(
             chunks,

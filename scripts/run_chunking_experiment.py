@@ -62,7 +62,9 @@ def load_documents(path):
 
 def main(strategy):
 
+
     print("Loading processed corpus...")
+
 
     documents = load_documents(
         PROCESSED_DATA
@@ -75,32 +77,6 @@ def main(strategy):
     )
 
 
-    if strategy == "fixed":
-
-        chunk_function = create_fixed_chunks
-
-
-    elif strategy == "sentence":
-
-        chunk_function = create_sentence_chunks
-
-
-    elif strategy == "semantic":
-
-        chunk_function = create_semantic_chunks
-
-
-    elif strategy == "topic":
-
-        chunk_function = create_topic_chunks
-
-
-    else:
-
-        raise ValueError(
-            f"Unsupported strategy: {strategy}"
-        )
-
 
     print(
         "Running strategy:",
@@ -111,15 +87,63 @@ def main(strategy):
     all_chunks = []
 
 
-    for document in documents:
 
-        chunks = chunk_function(
-            document["text"],
-            document["title"],
-            document["doc_id"]
+    # ======================================================
+    # Topic-aware BERTopic
+    # ======================================================
+
+    if strategy == "topic":
+
+
+        all_chunks = create_topic_chunks(
+            documents
         )
 
-        all_chunks.extend(chunks)
+
+
+    # ======================================================
+    # Other chunking strategies
+    # ======================================================
+
+    else:
+
+
+        if strategy == "fixed":
+
+            chunk_function = create_fixed_chunks
+
+
+        elif strategy == "sentence":
+
+            chunk_function = create_sentence_chunks
+
+
+        elif strategy == "semantic":
+
+            chunk_function = create_semantic_chunks
+
+
+        else:
+
+            raise ValueError(
+                f"Unsupported strategy: {strategy}"
+            )
+
+
+
+        for document in documents:
+
+
+            chunks = chunk_function(
+                document["text"],
+                document["title"],
+                document["doc_id"]
+            )
+
+
+            all_chunks.extend(
+                chunks
+            )
 
 
 
@@ -129,15 +153,19 @@ def main(strategy):
     )
 
 
+
     output_file = CHUNK_OUTPUTS[strategy]
 
 
-    output_path = Path(output_file)
+    output_path = Path(
+        output_file
+    )
 
     output_path.parent.mkdir(
         parents=True,
         exist_ok=True
     )
+
 
 
     with open(
@@ -146,12 +174,14 @@ def main(strategy):
         encoding="utf-8"
     ) as f:
 
+
         json.dump(
             all_chunks,
             f,
             indent=2,
             ensure_ascii=False
         )
+
 
 
     print(

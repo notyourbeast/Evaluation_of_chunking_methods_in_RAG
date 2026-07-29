@@ -1,7 +1,11 @@
 import spacy
 
+from bertopic import BERTopic
+from umap import UMAP
+from hdbscan import HDBSCAN
+
 from sentence_transformers import SentenceTransformer
-from sklearn.metrics.pairwise import cosine_similarity
+
 
 
 # ==========================================================
@@ -11,8 +15,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 CHUNK_SIZE = 256
 
 MIN_CHUNK_SIZE = 100
-
-TOPIC_CHANGE_THRESHOLD = 0.45
 
 MODEL_MAX_TOKENS = 256
 
@@ -32,7 +34,6 @@ nlp = spacy.load(
 embedding_model = SentenceTransformer(
     "sentence-transformers/all-MiniLM-L6-v2"
 )
-
 
 embedding_model.max_seq_length = MODEL_MAX_TOKENS
 
@@ -70,39 +71,35 @@ def split_long_sentence(sentence):
 
     segments = []
 
-    current_words = []
+    current = []
 
 
     for word in words:
 
-        current_words.append(word)
+        current.append(word)
 
-        candidate = " ".join(
-            current_words
-        )
+        candidate = " ".join(current)
 
 
         if count_tokens(candidate) > SAFE_SENTENCE_LIMIT:
 
-            current_words.pop()
+            current.pop()
 
 
-            if current_words:
+            if current:
 
                 segments.append(
-                    " ".join(current_words)
+                    " ".join(current)
                 )
 
 
-            current_words = [
-                word
-            ]
+            current = [word]
 
 
-    if current_words:
+    if current:
 
         segments.append(
-            " ".join(current_words)
+            " ".join(current)
         )
 
 
@@ -153,160 +150,284 @@ def save_chunk(
 
 
 # ==========================================================
-# Topic-aware Chunk Creation
+# BERTopic Topic-Aware Chunking
 # ==========================================================
 
-def create_topic_chunks(text, title, doc_id):
+def create_topic_chunks(documents):
 
 
-    doc = nlp(text)
+    print("Preparing sentences for BERTopic...")
 
 
-    raw_sentences = [
-        sent.text.strip()
-        for sent in doc.sents
-        if sent.text.strip()
-    ]
+    sentence_records = []
+
+    texts = []
 
 
-    sentences = []
+
+    for document in documents:
 
 
-    for sentence in raw_sentences:
-
-        sentences.extend(
-            split_long_sentence(sentence)
+        doc = nlp(
+            document["text"]
         )
 
 
-    if not sentences:
-
-        return []
+        sentences = []
 
 
+        for sent in doc.sents:
 
-    sentence_embeddings = embedding_model.encode(
-        sentences,
-        normalize_embeddings=True,
-        convert_to_numpy=True,
-        batch_size=32,
-        show_progress_bar=False
+            clean = sent.text.strip()
+
+
+            if clean:
+
+                sentences.extend(
+                    split_long_sentence(clean)
+                )
+
+
+
+        for sentence in sentences:
+
+
+            sentence_records.append(
+                {
+                    "doc_id": document["doc_id"],
+                    "title": document["title"],
+                    "sentence": sentence
+                }
+            )
+
+
+            texts.append(
+                sentence
+            )
+
+
+
+    print(
+        "Total sentences:",
+        len(texts)
     )
 
 
 
-    chunks = []
+    # ======================================================
+    # Sentence embeddings
+    # ======================================================
 
-    current_sentences = []
-
-    chunk_number = 0
-
-    start_token = 0
-
-    current_tokens = 0
+    print(
+        "Generating sentence embeddings..."
+    )
 
 
+    embeddings = embedding_model.encode(
+        texts,
+        normalize_embeddings=True,
+        convert_to_numpy=True,
+        batch_size=32,
+        show_progress_bar=True
+    )
 
-    for i, sentence in enumerate(sentences):
 
 
-        sentence_tokens = count_tokens(
-            sentence
+    # ======================================================
+    # BERTopic
+    # ======================================================
+
+    print(
+        "Running BERTopic..."
+    )
+
+
+    umap_model = UMAP(
+        n_neighbors=15,
+        n_components=5,
+        min_dist=0.0,
+        metric="cosine",
+        random_state=42
+    )
+
+
+    hdbscan_model = HDBSCAN(
+        min_cluster_size=10,
+        metric="euclidean",
+        cluster_selection_method="eom"
+    )
+
+
+    topic_model = BERTopic(
+        umap_model=umap_model,
+        hdbscan_model=hdbscan_model,
+        embedding_model=None,
+        verbose=False
+    )
+
+
+    topics, _ = topic_model.fit_transform(
+        texts,
+        embeddings
+    )
+
+
+    print(
+        "Topics found:",
+        len(set(topics))
+    )
+
+
+
+    # ======================================================
+    # Group sentences by document
+    # ======================================================
+
+    grouped = {}
+
+
+    for record, topic in zip(
+        sentence_records,
+        topics
+    ):
+
+
+        doc_id = record["doc_id"]
+
+
+        if doc_id not in grouped:
+
+            grouped[doc_id] = []
+
+
+        grouped[doc_id].append(
+            {
+                "title": record["title"],
+                "sentence": record["sentence"],
+                "topic": topic
+            }
         )
 
 
-        topic_boundary = False
+
+    # ======================================================
+    # Create chunks
+    # ======================================================
+
+    print(
+        "Creating topic chunks..."
+    )
 
 
-        if i > 0:
-
-            similarity = cosine_similarity(
-                [
-                    sentence_embeddings[i-1]
-                ],
-                [
-                    sentence_embeddings[i]
-                ]
-            )[0][0]
-
-
-            if similarity < TOPIC_CHANGE_THRESHOLD:
-
-                topic_boundary = True
+    all_chunks = []
 
 
 
-        if (
-            topic_boundary
-            and current_tokens >= MIN_CHUNK_SIZE
-        ):
+    for doc_id, sentences in grouped.items():
 
-            save_chunk(
-                chunks,
-                doc_id,
-                title,
-                chunk_number,
-                start_token,
-                current_tokens,
-                " ".join(current_sentences)
+
+        chunk_number = 0
+
+        current = []
+
+        current_tokens = 0
+
+        current_topic = None
+
+        start_token = 0
+
+
+
+        for item in sentences:
+
+
+            sentence_tokens = count_tokens(
+                item["sentence"]
             )
 
 
-            chunk_number += 1
 
-            start_token += current_tokens
-
-            current_sentences = []
-
-            current_tokens = 0
-
-
-
-        if (
-            current_tokens + sentence_tokens > CHUNK_SIZE
-            and current_sentences
-        ):
-
-            save_chunk(
-                chunks,
-                doc_id,
-                title,
-                chunk_number,
-                start_token,
-                current_tokens,
-                " ".join(current_sentences)
+            topic_changed = (
+                current_topic is not None
+                and item["topic"] != current_topic
             )
 
 
-            chunk_number += 1
 
-            start_token += current_tokens
+            should_split = (
 
-            current_sentences = []
+                current
 
-            current_tokens = 0
+                and current_tokens >= MIN_CHUNK_SIZE
 
+                and topic_changed
 
+            ) or (
 
-        current_sentences.append(
-            sentence
-        )
+                current
 
-        current_tokens += sentence_tokens
+                and current_tokens + sentence_tokens > CHUNK_SIZE
 
-
-
-    if current_sentences:
-
-        save_chunk(
-            chunks,
-            doc_id,
-            title,
-            chunk_number,
-            start_token,
-            current_tokens,
-            " ".join(current_sentences)
-        )
+            )
 
 
-    return chunks
+
+            if should_split:
+
+
+                save_chunk(
+                    all_chunks,
+                    doc_id,
+                    current[0]["title"],
+                    chunk_number,
+                    start_token,
+                    current_tokens,
+                    " ".join(
+                        x["sentence"]
+                        for x in current
+                    )
+                )
+
+
+                chunk_number += 1
+
+                start_token += current_tokens
+
+
+                current = []
+
+                current_tokens = 0
+
+
+
+            current.append(
+                item
+            )
+
+
+            current_tokens += sentence_tokens
+
+
+            current_topic = item["topic"]
+
+
+
+        if current:
+
+
+            save_chunk(
+                all_chunks,
+                doc_id,
+                current[0]["title"],
+                chunk_number,
+                start_token,
+                current_tokens,
+                " ".join(
+                    x["sentence"]
+                    for x in current
+                )
+            )
+
+
+
+    return all_chunks
