@@ -3104,8 +3104,8 @@
     "chunk_size": 256,
     "chunk_overlap": 0,
     "start_token": 5699,
-    "end_token": 6000,
-    "token_count": 301
+    "end_token": 5939,
+    "token_count": 240
   },
   {
     "doc_id": "wiki_0006",
@@ -3115,9 +3115,21 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 6000,
+    "start_token": 5939,
+    "end_token": 6190,
+    "token_count": 251
+  },
+  {
+    "doc_id": "wiki_0006",
+    "title": "Natural language processing",
+    "source": "wikipedia",
+    "chunk_id": "wiki_0006_sentence_chunk_0026",
+    "chunk_method": "sentence",
+    "chunk_size": 256,
+    "chunk_overlap": 0,
+    "start_token": 6190,
     "end_token": 6209,
-    "token_count": 209
+    "token_count": 19
   },
   {
     "doc_id": "wiki_0007",
@@ -6752,8 +6764,8 @@
     "chunk_size": 256,
     "chunk_overlap": 0,
     "start_token": 4344,
-    "end_token": 4603,
-    "token_count": 259
+    "end_token": 4573,
+    "token_count": 229
   },
   {
     "doc_id": "wiki_0012",
@@ -6763,9 +6775,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 4603,
+    "start_token": 4573,
     "end_token": 4822,
-    "token_count": 219
+    "token_count": 249
   },
   {
     "doc_id": "wiki_0012",
@@ -6836,8 +6848,8 @@
     "chunk_size": 256,
     "chunk_overlap": 0,
     "start_token": 5996,
-    "end_token": 6320,
-    "token_count": 324
+    "end_token": 6233,
+    "token_count": 237
   },
   {
     "doc_id": "wiki_0012",
@@ -6847,9 +6859,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 6320,
-    "end_token": 6566,
-    "token_count": 246
+    "start_token": 6233,
+    "end_token": 6480,
+    "token_count": 247
   },
   {
     "doc_id": "wiki_0012",
@@ -6859,9 +6871,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 6566,
-    "end_token": 6783,
-    "token_count": 217
+    "start_token": 6480,
+    "end_token": 6721,
+    "token_count": 241
   },
   {
     "doc_id": "wiki_0012",
@@ -6871,9 +6883,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 6783,
-    "end_token": 6982,
-    "token_count": 199
+    "start_token": 6721,
+    "end_token": 6946,
+    "token_count": 225
   },
   {
     "doc_id": "wiki_0012",
@@ -6883,9 +6895,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 6982,
-    "end_token": 7217,
-    "token_count": 235
+    "start_token": 6946,
+    "end_token": 7177,
+    "token_count": 231
   },
   {
     "doc_id": "wiki_0012",
@@ -6895,9 +6907,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 7217,
-    "end_token": 7460,
-    "token_count": 243
+    "start_token": 7177,
+    "end_token": 7267,
+    "token_count": 90
   },
   {
     "doc_id": "wiki_0012",
@@ -6907,15 +6919,27 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 7460,
-    "end_token": 7715,
-    "token_count": 255
+    "start_token": 7267,
+    "end_token": 7481,
+    "token_count": 214
   },
   {
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
     "chunk_id": "wiki_0012_sentence_chunk_0034",
+    "chunk_method": "sentence",
+    "chunk_size": 256,
+    "chunk_overlap": 0,
+    "start_token": 7481,
+    "end_token": 7715,
+    "token_count": 234
+  },
+  {
+    "doc_id": "wiki_0012",
+    "title": "General relativity",
+    "source": "wikipedia",
+    "chunk_id": "wiki_0012_sentence_chunk_0035",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -6927,7 +6951,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0035",
+    "chunk_id": "wiki_0012_sentence_chunk_0036",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -6939,7 +6963,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0036",
+    "chunk_id": "wiki_0012_sentence_chunk_0037",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -6951,7 +6975,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0037",
+    "chunk_id": "wiki_0012_sentence_chunk_0038",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -6963,7 +6987,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0038",
+    "chunk_id": "wiki_0012_sentence_chunk_0039",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -6975,7 +6999,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0039",
+    "chunk_id": "wiki_0012_sentence_chunk_0040",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -6987,7 +7011,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0040",
+    "chunk_id": "wiki_0012_sentence_chunk_0041",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -6999,7 +7023,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0041",
+    "chunk_id": "wiki_0012_sentence_chunk_0042",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7011,7 +7035,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0042",
+    "chunk_id": "wiki_0012_sentence_chunk_0043",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7023,7 +7047,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0043",
+    "chunk_id": "wiki_0012_sentence_chunk_0044",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7035,7 +7059,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0044",
+    "chunk_id": "wiki_0012_sentence_chunk_0045",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7047,7 +7071,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0045",
+    "chunk_id": "wiki_0012_sentence_chunk_0046",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7059,7 +7083,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0046",
+    "chunk_id": "wiki_0012_sentence_chunk_0047",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7071,7 +7095,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0047",
+    "chunk_id": "wiki_0012_sentence_chunk_0048",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7083,7 +7107,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0048",
+    "chunk_id": "wiki_0012_sentence_chunk_0049",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7095,7 +7119,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0049",
+    "chunk_id": "wiki_0012_sentence_chunk_0050",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7107,7 +7131,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0050",
+    "chunk_id": "wiki_0012_sentence_chunk_0051",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7119,7 +7143,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0051",
+    "chunk_id": "wiki_0012_sentence_chunk_0052",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7131,7 +7155,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0052",
+    "chunk_id": "wiki_0012_sentence_chunk_0053",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7143,7 +7167,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0053",
+    "chunk_id": "wiki_0012_sentence_chunk_0054",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7155,7 +7179,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0054",
+    "chunk_id": "wiki_0012_sentence_chunk_0055",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7167,7 +7191,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0055",
+    "chunk_id": "wiki_0012_sentence_chunk_0056",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7179,7 +7203,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0056",
+    "chunk_id": "wiki_0012_sentence_chunk_0057",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7191,7 +7215,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0057",
+    "chunk_id": "wiki_0012_sentence_chunk_0058",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7203,7 +7227,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0058",
+    "chunk_id": "wiki_0012_sentence_chunk_0059",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7215,7 +7239,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0059",
+    "chunk_id": "wiki_0012_sentence_chunk_0060",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7227,7 +7251,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0060",
+    "chunk_id": "wiki_0012_sentence_chunk_0061",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7239,7 +7263,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0061",
+    "chunk_id": "wiki_0012_sentence_chunk_0062",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7251,7 +7275,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0062",
+    "chunk_id": "wiki_0012_sentence_chunk_0063",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7263,7 +7287,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0063",
+    "chunk_id": "wiki_0012_sentence_chunk_0064",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7275,7 +7299,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0064",
+    "chunk_id": "wiki_0012_sentence_chunk_0065",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7287,7 +7311,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0065",
+    "chunk_id": "wiki_0012_sentence_chunk_0066",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7299,7 +7323,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0066",
+    "chunk_id": "wiki_0012_sentence_chunk_0067",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7311,7 +7335,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0067",
+    "chunk_id": "wiki_0012_sentence_chunk_0068",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7323,7 +7347,7 @@
     "doc_id": "wiki_0012",
     "title": "General relativity",
     "source": "wikipedia",
-    "chunk_id": "wiki_0012_sentence_chunk_0068",
+    "chunk_id": "wiki_0012_sentence_chunk_0069",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7604,8 +7628,8 @@
     "chunk_size": 256,
     "chunk_overlap": 0,
     "start_token": 4898,
-    "end_token": 5199,
-    "token_count": 301
+    "end_token": 5135,
+    "token_count": 237
   },
   {
     "doc_id": "wiki_0013",
@@ -7615,9 +7639,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 5199,
-    "end_token": 5409,
-    "token_count": 210
+    "start_token": 5135,
+    "end_token": 5297,
+    "token_count": 162
   },
   {
     "doc_id": "wiki_0013",
@@ -7627,9 +7651,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 5409,
-    "end_token": 5664,
-    "token_count": 255
+    "start_token": 5297,
+    "end_token": 5534,
+    "token_count": 237
   },
   {
     "doc_id": "wiki_0013",
@@ -7639,15 +7663,27 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 5664,
-    "end_token": 5900,
-    "token_count": 236
+    "start_token": 5534,
+    "end_token": 5708,
+    "token_count": 174
   },
   {
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
     "chunk_id": "wiki_0013_sentence_chunk_0026",
+    "chunk_method": "sentence",
+    "chunk_size": 256,
+    "chunk_overlap": 0,
+    "start_token": 5708,
+    "end_token": 5900,
+    "token_count": 192
+  },
+  {
+    "doc_id": "wiki_0013",
+    "title": "Quantum mechanics",
+    "source": "wikipedia",
+    "chunk_id": "wiki_0013_sentence_chunk_0027",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7659,7 +7695,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0027",
+    "chunk_id": "wiki_0013_sentence_chunk_0028",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7671,7 +7707,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0028",
+    "chunk_id": "wiki_0013_sentence_chunk_0029",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7683,7 +7719,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0029",
+    "chunk_id": "wiki_0013_sentence_chunk_0030",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7695,31 +7731,43 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0030",
-    "chunk_method": "sentence",
-    "chunk_size": 256,
-    "chunk_overlap": 0,
-    "start_token": 6757,
-    "end_token": 7073,
-    "token_count": 316
-  },
-  {
-    "doc_id": "wiki_0013",
-    "title": "Quantum mechanics",
-    "source": "wikipedia",
     "chunk_id": "wiki_0013_sentence_chunk_0031",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 7073,
-    "end_token": 7296,
-    "token_count": 223
+    "start_token": 6757,
+    "end_token": 6991,
+    "token_count": 234
   },
   {
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
     "chunk_id": "wiki_0013_sentence_chunk_0032",
+    "chunk_method": "sentence",
+    "chunk_size": 256,
+    "chunk_overlap": 0,
+    "start_token": 6991,
+    "end_token": 7216,
+    "token_count": 225
+  },
+  {
+    "doc_id": "wiki_0013",
+    "title": "Quantum mechanics",
+    "source": "wikipedia",
+    "chunk_id": "wiki_0013_sentence_chunk_0033",
+    "chunk_method": "sentence",
+    "chunk_size": 256,
+    "chunk_overlap": 0,
+    "start_token": 7216,
+    "end_token": 7296,
+    "token_count": 80
+  },
+  {
+    "doc_id": "wiki_0013",
+    "title": "Quantum mechanics",
+    "source": "wikipedia",
+    "chunk_id": "wiki_0013_sentence_chunk_0034",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7731,7 +7779,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0033",
+    "chunk_id": "wiki_0013_sentence_chunk_0035",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7743,7 +7791,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0034",
+    "chunk_id": "wiki_0013_sentence_chunk_0036",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7755,7 +7803,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0035",
+    "chunk_id": "wiki_0013_sentence_chunk_0037",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7767,7 +7815,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0036",
+    "chunk_id": "wiki_0013_sentence_chunk_0038",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7779,7 +7827,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0037",
+    "chunk_id": "wiki_0013_sentence_chunk_0039",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7791,7 +7839,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0038",
+    "chunk_id": "wiki_0013_sentence_chunk_0040",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7803,7 +7851,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0039",
+    "chunk_id": "wiki_0013_sentence_chunk_0041",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7815,7 +7863,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0040",
+    "chunk_id": "wiki_0013_sentence_chunk_0042",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7827,7 +7875,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0041",
+    "chunk_id": "wiki_0013_sentence_chunk_0043",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7839,7 +7887,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0042",
+    "chunk_id": "wiki_0013_sentence_chunk_0044",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7851,7 +7899,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0043",
+    "chunk_id": "wiki_0013_sentence_chunk_0045",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7863,7 +7911,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0044",
+    "chunk_id": "wiki_0013_sentence_chunk_0046",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7875,7 +7923,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0045",
+    "chunk_id": "wiki_0013_sentence_chunk_0047",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7887,7 +7935,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0046",
+    "chunk_id": "wiki_0013_sentence_chunk_0048",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7899,7 +7947,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0047",
+    "chunk_id": "wiki_0013_sentence_chunk_0049",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7911,7 +7959,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0048",
+    "chunk_id": "wiki_0013_sentence_chunk_0050",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7923,7 +7971,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0049",
+    "chunk_id": "wiki_0013_sentence_chunk_0051",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7935,7 +7983,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0050",
+    "chunk_id": "wiki_0013_sentence_chunk_0052",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7947,7 +7995,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0051",
+    "chunk_id": "wiki_0013_sentence_chunk_0053",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -7959,7 +8007,7 @@
     "doc_id": "wiki_0013",
     "title": "Quantum mechanics",
     "source": "wikipedia",
-    "chunk_id": "wiki_0013_sentence_chunk_0052",
+    "chunk_id": "wiki_0013_sentence_chunk_0054",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -14024,8 +14072,8 @@
     "chunk_size": 256,
     "chunk_overlap": 0,
     "start_token": 18471,
-    "end_token": 18782,
-    "token_count": 311
+    "end_token": 18711,
+    "token_count": 240
   },
   {
     "doc_id": "wiki_0020",
@@ -14035,9 +14083,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 18782,
+    "start_token": 18711,
     "end_token": 18942,
-    "token_count": 160
+    "token_count": 231
   },
   {
     "doc_id": "wiki_0021",
@@ -17684,8 +17732,8 @@
     "chunk_size": 256,
     "chunk_overlap": 0,
     "start_token": 8933,
-    "end_token": 9077,
-    "token_count": 144
+    "end_token": 9131,
+    "token_count": 198
   },
   {
     "doc_id": "wiki_0026",
@@ -17695,9 +17743,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 9077,
-    "end_token": 9332,
-    "token_count": 255
+    "start_token": 9131,
+    "end_token": 9360,
+    "token_count": 229
   },
   {
     "doc_id": "wiki_0026",
@@ -17707,9 +17755,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 9332,
-    "end_token": 9535,
-    "token_count": 203
+    "start_token": 9360,
+    "end_token": 9609,
+    "token_count": 249
   },
   {
     "doc_id": "wiki_0026",
@@ -17719,9 +17767,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 9535,
-    "end_token": 9750,
-    "token_count": 215
+    "start_token": 9609,
+    "end_token": 9863,
+    "token_count": 254
   },
   {
     "doc_id": "wiki_0026",
@@ -17731,9 +17779,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 9750,
-    "end_token": 9918,
-    "token_count": 168
+    "start_token": 9863,
+    "end_token": 10112,
+    "token_count": 249
   },
   {
     "doc_id": "wiki_0026",
@@ -17743,21 +17791,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 9918,
-    "end_token": 10146,
-    "token_count": 228
-  },
-  {
-    "doc_id": "wiki_0026",
-    "title": "Internet",
-    "source": "wikipedia",
-    "chunk_id": "wiki_0026_sentence_chunk_0043",
-    "chunk_method": "sentence",
-    "chunk_size": 256,
-    "chunk_overlap": 0,
-    "start_token": 10146,
+    "start_token": 10112,
     "end_token": 10221,
-    "token_count": 75
+    "token_count": 109
   },
   {
     "doc_id": "wiki_0027",
@@ -19736,8 +19772,8 @@
     "chunk_size": 256,
     "chunk_overlap": 0,
     "start_token": 8967,
-    "end_token": 9431,
-    "token_count": 464
+    "end_token": 9205,
+    "token_count": 238
   },
   {
     "doc_id": "wiki_0029",
@@ -19747,15 +19783,27 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 9431,
-    "end_token": 9668,
-    "token_count": 237
+    "start_token": 9205,
+    "end_token": 9456,
+    "token_count": 251
   },
   {
     "doc_id": "wiki_0029",
     "title": "Amazon River",
     "source": "wikipedia",
     "chunk_id": "wiki_0029_sentence_chunk_0040",
+    "chunk_method": "sentence",
+    "chunk_size": 256,
+    "chunk_overlap": 0,
+    "start_token": 9456,
+    "end_token": 9668,
+    "token_count": 212
+  },
+  {
+    "doc_id": "wiki_0029",
+    "title": "Amazon River",
+    "source": "wikipedia",
+    "chunk_id": "wiki_0029_sentence_chunk_0041",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -32324,8 +32372,8 @@
     "chunk_size": 256,
     "chunk_overlap": 0,
     "start_token": 17718,
-    "end_token": 18002,
-    "token_count": 284
+    "end_token": 17958,
+    "token_count": 240
   },
   {
     "doc_id": "wiki_0046",
@@ -32335,9 +32383,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 18002,
-    "end_token": 18219,
-    "token_count": 217
+    "start_token": 17958,
+    "end_token": 18151,
+    "token_count": 193
   },
   {
     "doc_id": "wiki_0046",
@@ -32347,9 +32395,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 18219,
-    "end_token": 18441,
-    "token_count": 222
+    "start_token": 18151,
+    "end_token": 18375,
+    "token_count": 224
   },
   {
     "doc_id": "wiki_0046",
@@ -32359,9 +32407,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 18441,
+    "start_token": 18375,
     "end_token": 18478,
-    "token_count": 37
+    "token_count": 103
   },
   {
     "doc_id": "wiki_0046",
@@ -32372,8 +32420,8 @@
     "chunk_size": 256,
     "chunk_overlap": 0,
     "start_token": 18478,
-    "end_token": 18810,
-    "token_count": 332
+    "end_token": 18716,
+    "token_count": 238
   },
   {
     "doc_id": "wiki_0046",
@@ -32383,9 +32431,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 18810,
-    "end_token": 19048,
-    "token_count": 238
+    "start_token": 18716,
+    "end_token": 18898,
+    "token_count": 182
   },
   {
     "doc_id": "wiki_0046",
@@ -32395,9 +32443,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 19048,
+    "start_token": 18898,
     "end_token": 19072,
-    "token_count": 24
+    "token_count": 174
   },
   {
     "doc_id": "wiki_0046",
@@ -32408,8 +32456,8 @@
     "chunk_size": 256,
     "chunk_overlap": 0,
     "start_token": 19072,
-    "end_token": 19385,
-    "token_count": 313
+    "end_token": 19306,
+    "token_count": 234
   },
   {
     "doc_id": "wiki_0046",
@@ -32419,9 +32467,9 @@
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 19385,
+    "start_token": 19306,
     "end_token": 19469,
-    "token_count": 84
+    "token_count": 163
   },
   {
     "doc_id": "wiki_0046",
@@ -32432,14 +32480,38 @@
     "chunk_size": 256,
     "chunk_overlap": 0,
     "start_token": 19469,
-    "end_token": 20153,
-    "token_count": 684
+    "end_token": 19691,
+    "token_count": 222
   },
   {
     "doc_id": "wiki_0046",
     "title": "Higgs boson",
     "source": "wikipedia",
     "chunk_id": "wiki_0046_sentence_chunk_0087",
+    "chunk_method": "sentence",
+    "chunk_size": 256,
+    "chunk_overlap": 0,
+    "start_token": 19691,
+    "end_token": 19931,
+    "token_count": 240
+  },
+  {
+    "doc_id": "wiki_0046",
+    "title": "Higgs boson",
+    "source": "wikipedia",
+    "chunk_id": "wiki_0046_sentence_chunk_0088",
+    "chunk_method": "sentence",
+    "chunk_size": 256,
+    "chunk_overlap": 0,
+    "start_token": 19931,
+    "end_token": 20153,
+    "token_count": 222
+  },
+  {
+    "doc_id": "wiki_0046",
+    "title": "Higgs boson",
+    "source": "wikipedia",
+    "chunk_id": "wiki_0046_sentence_chunk_0089",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
@@ -32451,25 +32523,25 @@
     "doc_id": "wiki_0046",
     "title": "Higgs boson",
     "source": "wikipedia",
-    "chunk_id": "wiki_0046_sentence_chunk_0088",
+    "chunk_id": "wiki_0046_sentence_chunk_0090",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
     "start_token": 20303,
-    "end_token": 20676,
-    "token_count": 373
+    "end_token": 20536,
+    "token_count": 233
   },
   {
     "doc_id": "wiki_0046",
     "title": "Higgs boson",
     "source": "wikipedia",
-    "chunk_id": "wiki_0046_sentence_chunk_0089",
+    "chunk_id": "wiki_0046_sentence_chunk_0091",
     "chunk_method": "sentence",
     "chunk_size": 256,
     "chunk_overlap": 0,
-    "start_token": 20676,
+    "start_token": 20536,
     "end_token": 20709,
-    "token_count": 33
+    "token_count": 173
   },
   {
     "doc_id": "wiki_0047",
