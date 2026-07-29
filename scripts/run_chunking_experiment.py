@@ -32,6 +32,11 @@ from chunkers.semantic_chunker import (
 )
 
 
+from chunkers.topic_chunker import (
+    create_topic_chunks
+)
+
+
 
 def load_documents(path):
 
@@ -83,6 +88,11 @@ def main(strategy):
     elif strategy == "semantic":
 
         chunk_function = create_semantic_chunks
+
+
+    elif strategy == "topic":
+
+        chunk_function = create_topic_chunks
 
 
     else:
@@ -163,7 +173,8 @@ if __name__ == "__main__":
         choices=[
             "fixed",
             "sentence",
-            "semantic"
+            "semantic",
+            "topic"
         ]
     )
 
