@@ -1,0 +1,121 @@
+strategy,question_id,question,answer,hit,rank,precision_at_5,mrr
+fixed,4,when was puerto rico added to the usa,1950,1,5,0.2,0.2
+fixed,6,which side of the white house is the front,north,0,0,0.0,0
+fixed,9,in which year vivo launch its first phone in india,2014,0,0,0.0,0
+fixed,10,where does it talk about mary magdalene in the bible,new testament,0,0,0.0,0
+fixed,12,what is the origin of the name cynthia,greek,1,2,0.2,0.5
+fixed,14,what's the legal marriage age in new york,18,1,1,0.4,1.0
+fixed,15,when do the red hot chili peppers tour,march 2018,0,0,0.0,0
+fixed,25,protozoan classification used to be based on their means of,locomotion,0,0,0.0,0
+fixed,27,ice sheets and tundra are typical of which koppen climate category,polar,1,3,0.2,0.3333333333333333
+fixed,28,what is the size of the angles of an equilateral triangle,60°,0,0,0.0,0
+fixed,31,what counties are in the 6th congressional district in ga,fulton,0,0,0.0,0
+fixed,35,who did chris long play football for last year,eagles,0,0,0.0,0
+fixed,37,how many episode of my hero academia season 2,25,1,2,0.4,0.5
+fixed,41,when did north korea launch the first missile,1984,0,0,0.0,0
+fixed,44,when did india participate in olympics for first time,1900,0,0,0.0,0
+fixed,47,what was the last year they made the gmc envoy,2008,0,0,0.0,0
+fixed,52,when did miss usa last win miss universe,2012,0,0,0.0,0
+fixed,55,when will new tappan zee bridge be completed,the end of 2018,0,0,0.0,0
+fixed,60,who does jessica marry in the merchant of venice,lorenzo,0,0,0.0,0
+fixed,61,when were the triplets born on this is us,1980,0,0,0.0,0
+fixed,62,what degree do you get out of medical school,doctor of medicine (md,0,0,0.0,0
+fixed,63,what was the source of alpha particles in rutherford's experiment,helium nuclei,0,0,0.0,0
+fixed,70,who began the mass printing of bibles five centuries ago,johannes gutenberg,0,0,0.0,0
+fixed,75,what are the two main political parties in france,the republicans,0,0,0.0,0
+fixed,76,when did the golden knights join the nhl,2017,0,0,0.0,0
+fixed,77,how many episodes in season 1 of the oc,27,0,0,0.0,0
+fixed,85,when did the olympics start every 2 years,1994,0,0,0.0,0
+fixed,88,when did they launch the international space station,1998,0,0,0.0,0
+fixed,91,where did the idea of a messiah come from,judaism,1,5,0.2,0.2
+fixed,93,membership in the european union requires countries to have which type of government,democracy,1,1,1.0,1.0
+sentence,4,when was puerto rico added to the usa,1950,1,4,0.2,0.25
+sentence,6,which side of the white house is the front,north,0,0,0.0,0
+sentence,9,in which year vivo launch its first phone in india,2014,1,3,0.2,0.3333333333333333
+sentence,10,where does it talk about mary magdalene in the bible,new testament,0,0,0.0,0
+sentence,12,what is the origin of the name cynthia,greek,1,1,0.2,1.0
+sentence,14,what's the legal marriage age in new york,18,1,1,0.4,1.0
+sentence,15,when do the red hot chili peppers tour,march 2018,0,0,0.0,0
+sentence,25,protozoan classification used to be based on their means of,locomotion,0,0,0.0,0
+sentence,27,ice sheets and tundra are typical of which koppen climate category,polar,1,3,0.2,0.3333333333333333
+sentence,28,what is the size of the angles of an equilateral triangle,60°,0,0,0.0,0
+sentence,31,what counties are in the 6th congressional district in ga,fulton,0,0,0.0,0
+sentence,35,who did chris long play football for last year,eagles,0,0,0.0,0
+sentence,37,how many episode of my hero academia season 2,25,0,0,0.0,0
+sentence,41,when did north korea launch the first missile,1984,0,0,0.0,0
+sentence,44,when did india participate in olympics for first time,1900,1,3,0.2,0.3333333333333333
+sentence,47,what was the last year they made the gmc envoy,2008,0,0,0.0,0
+sentence,52,when did miss usa last win miss universe,2012,0,0,0.0,0
+sentence,55,when will new tappan zee bridge be completed,the end of 2018,0,0,0.0,0
+sentence,60,who does jessica marry in the merchant of venice,lorenzo,0,0,0.0,0
+sentence,61,when were the triplets born on this is us,1980,0,0,0.0,0
+sentence,62,what degree do you get out of medical school,doctor of medicine (md,0,0,0.0,0
+sentence,63,what was the source of alpha particles in rutherford's experiment,helium nuclei,0,0,0.0,0
+sentence,70,who began the mass printing of bibles five centuries ago,johannes gutenberg,0,0,0.0,0
+sentence,75,what are the two main political parties in france,the republicans,0,0,0.0,0
+sentence,76,when did the golden knights join the nhl,2017,0,0,0.0,0
+sentence,77,how many episodes in season 1 of the oc,27,0,0,0.0,0
+sentence,85,when did the olympics start every 2 years,1994,0,0,0.0,0
+sentence,88,when did they launch the international space station,1998,0,0,0.0,0
+sentence,91,where did the idea of a messiah come from,judaism,1,2,0.2,0.5
+sentence,93,membership in the european union requires countries to have which type of government,democracy,1,1,0.8,1.0
+semantic,4,when was puerto rico added to the usa,1950,0,0,0.0,0
+semantic,6,which side of the white house is the front,north,1,1,0.2,1.0
+semantic,9,in which year vivo launch its first phone in india,2014,0,0,0.0,0
+semantic,10,where does it talk about mary magdalene in the bible,new testament,0,0,0.0,0
+semantic,12,what is the origin of the name cynthia,greek,1,3,0.2,0.3333333333333333
+semantic,14,what's the legal marriage age in new york,18,1,1,0.2,1.0
+semantic,15,when do the red hot chili peppers tour,march 2018,0,0,0.0,0
+semantic,25,protozoan classification used to be based on their means of,locomotion,0,0,0.0,0
+semantic,27,ice sheets and tundra are typical of which koppen climate category,polar,0,0,0.0,0
+semantic,28,what is the size of the angles of an equilateral triangle,60°,0,0,0.0,0
+semantic,31,what counties are in the 6th congressional district in ga,fulton,0,0,0.0,0
+semantic,35,who did chris long play football for last year,eagles,0,0,0.0,0
+semantic,37,how many episode of my hero academia season 2,25,0,0,0.0,0
+semantic,41,when did north korea launch the first missile,1984,0,0,0.0,0
+semantic,44,when did india participate in olympics for first time,1900,0,0,0.0,0
+semantic,47,what was the last year they made the gmc envoy,2008,0,0,0.0,0
+semantic,52,when did miss usa last win miss universe,2012,0,0,0.0,0
+semantic,55,when will new tappan zee bridge be completed,the end of 2018,0,0,0.0,0
+semantic,60,who does jessica marry in the merchant of venice,lorenzo,0,0,0.0,0
+semantic,61,when were the triplets born on this is us,1980,0,0,0.0,0
+semantic,62,what degree do you get out of medical school,doctor of medicine (md,0,0,0.0,0
+semantic,63,what was the source of alpha particles in rutherford's experiment,helium nuclei,0,0,0.0,0
+semantic,70,who began the mass printing of bibles five centuries ago,johannes gutenberg,0,0,0.0,0
+semantic,75,what are the two main political parties in france,the republicans,0,0,0.0,0
+semantic,76,when did the golden knights join the nhl,2017,0,0,0.0,0
+semantic,77,how many episodes in season 1 of the oc,27,0,0,0.0,0
+semantic,85,when did the olympics start every 2 years,1994,0,0,0.0,0
+semantic,88,when did they launch the international space station,1998,0,0,0.0,0
+semantic,91,where did the idea of a messiah come from,judaism,0,0,0.0,0
+semantic,93,membership in the european union requires countries to have which type of government,democracy,1,1,0.6,1.0
+topic,4,when was puerto rico added to the usa,1950,0,0,0.0,0
+topic,6,which side of the white house is the front,north,1,3,0.2,0.3333333333333333
+topic,9,in which year vivo launch its first phone in india,2014,0,0,0.0,0
+topic,10,where does it talk about mary magdalene in the bible,new testament,0,0,0.0,0
+topic,12,what is the origin of the name cynthia,greek,1,1,0.6,1.0
+topic,14,what's the legal marriage age in new york,18,1,1,0.4,1.0
+topic,15,when do the red hot chili peppers tour,march 2018,0,0,0.0,0
+topic,25,protozoan classification used to be based on their means of,locomotion,0,0,0.0,0
+topic,27,ice sheets and tundra are typical of which koppen climate category,polar,0,0,0.0,0
+topic,28,what is the size of the angles of an equilateral triangle,60°,0,0,0.0,0
+topic,31,what counties are in the 6th congressional district in ga,fulton,0,0,0.0,0
+topic,35,who did chris long play football for last year,eagles,0,0,0.0,0
+topic,37,how many episode of my hero academia season 2,25,1,1,0.2,1.0
+topic,41,when did north korea launch the first missile,1984,0,0,0.0,0
+topic,44,when did india participate in olympics for first time,1900,0,0,0.0,0
+topic,47,what was the last year they made the gmc envoy,2008,0,0,0.0,0
+topic,52,when did miss usa last win miss universe,2012,0,0,0.0,0
+topic,55,when will new tappan zee bridge be completed,the end of 2018,0,0,0.0,0
+topic,60,who does jessica marry in the merchant of venice,lorenzo,0,0,0.0,0
+topic,61,when were the triplets born on this is us,1980,0,0,0.0,0
+topic,62,what degree do you get out of medical school,doctor of medicine (md,0,0,0.0,0
+topic,63,what was the source of alpha particles in rutherford's experiment,helium nuclei,0,0,0.0,0
+topic,70,who began the mass printing of bibles five centuries ago,johannes gutenberg,0,0,0.0,0
+topic,75,what are the two main political parties in france,the republicans,0,0,0.0,0
+topic,76,when did the golden knights join the nhl,2017,0,0,0.0,0
+topic,77,how many episodes in season 1 of the oc,27,0,0,0.0,0
+topic,85,when did the olympics start every 2 years,1994,0,0,0.0,0
+topic,88,when did they launch the international space station,1998,0,0,0.0,0
+topic,91,where did the idea of a messiah come from,judaism,1,1,0.2,1.0
+topic,93,membership in the european union requires countries to have which type of government,democracy,1,1,0.4,1.0
