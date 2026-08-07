@@ -15,6 +15,11 @@ EFFICIENCY_FILE = (
     "results/efficiency_results.csv"
 )
 
+TOKEN_FILE = (
+    "results/token_usage_results.csv"
+)
+
+
 OUTPUT_FILE = (
     "results/final_results_summary.csv"
 )
@@ -44,15 +49,15 @@ INDEX_FILES = {
 
 
 # ==========================================================
-# Create summary
+# Main
 # ==========================================================
 
 def main():
 
 
-    # ----------------------------
+    # ------------------------------
     # Retrieval metrics
-    # ----------------------------
+    # ------------------------------
 
     retrieval = pd.read_csv(
         RETRIEVAL_FILE
@@ -74,130 +79,157 @@ def main():
     )
 
 
-    retrieval_summary = (
-        retrieval_summary
-        .rename(
-            columns={
-                "hit":
-                "recall_at_5"
-            }
-        )
+    retrieval_summary = retrieval_summary.rename(
+        columns={
+            "hit":
+            "recall_at_5"
+        }
     )
 
 
 
-    # ----------------------------
-    # Efficiency metrics
-    # ----------------------------
+    # ------------------------------
+    # Latency
+    # ------------------------------
 
     efficiency = pd.read_csv(
         EFFICIENCY_FILE
     )
 
 
-    efficiency = efficiency[
+    efficiency = (
+        efficiency
         [
-            "strategy",
-            "avg_total_latency_ms"
+            [
+                "strategy",
+                "avg_total_latency_ms"
+            ]
         ]
-    ]
+    )
 
 
 
-    # ----------------------------
-    # Chunk counts
-    # ----------------------------
+    # ------------------------------
+    # Token usage
+    # ------------------------------
 
-    chunks = []
+    token_usage = pd.read_csv(
+        TOKEN_FILE
+    )
 
 
-    for strategy, index_file in INDEX_FILES.items():
+    token_summary = (
+        token_usage
+        .groupby("strategy")
+        [
+            [
+                "context_tokens",
+                "context_characters"
+            ]
+        ]
+        .mean()
+        .reset_index()
+    )
 
+
+    token_summary = token_summary.rename(
+        columns={
+            "context_tokens":
+            "avg_context_tokens",
+
+            "context_characters":
+            "avg_context_characters"
+        }
+    )
+
+
+
+    # ------------------------------
+    # Indexed chunks
+    # ------------------------------
+
+    vectors = []
+
+
+    for strategy, file in INDEX_FILES.items():
 
         index = faiss.read_index(
-            index_file
+            file
         )
 
 
-        chunks.append(
+        vectors.append(
             {
                 "strategy":
                 strategy,
 
-                "num_chunks":
+                "indexed_chunks":
                 index.ntotal
             }
         )
 
 
-
-    chunks = pd.DataFrame(
-        chunks
+    vectors = pd.DataFrame(
+        vectors
     )
 
 
 
-    # ----------------------------
-    # Merge results
-    # ----------------------------
+    # ------------------------------
+    # Merge
+    # ------------------------------
 
     summary = (
         retrieval_summary
+
         .merge(
             efficiency,
             on="strategy"
         )
+
         .merge(
-            chunks,
+            token_summary,
+            on="strategy"
+        )
+
+        .merge(
+            vectors,
             on="strategy"
         )
     )
 
 
 
-    # ----------------------------
-    # Final column order
-    # ----------------------------
+    # Order columns
 
     summary = summary[
         [
             "strategy",
-            "num_chunks",
+
+            "indexed_chunks",
+
             "precision_at_5",
+
             "recall_at_5",
+
             "mrr",
-            "avg_total_latency_ms"
+
+            "avg_total_latency_ms",
+
+            "avg_context_tokens",
+
+            "avg_context_characters"
         ]
     ]
-    order = [
-        "fixed",
-        "sentence",
-        "semantic",
-        "topic"
-    ]
-
-    summary["strategy"] = pd.Categorical(
-        summary["strategy"],
-        categories=order,
-        ordered=True
-    )
-
-    summary = summary.sort_values(
-        "strategy"
-    )
-
-    summary["strategy"] = summary["strategy"].astype(str)
 
 
-    # ----------------------------
-    # Save
-    # ----------------------------
 
     Path(
         "results"
     ).mkdir(
         exist_ok=True
     )
+
 
 
     summary.to_csv(
@@ -211,15 +243,16 @@ def main():
     print(
         "Final Experiment Summary"
     )
+
     print(
-        "=" * 60
+        "=" * 70
     )
 
     print(summary)
 
 
-
     print()
+
     print(
         "Saved:",
         OUTPUT_FILE
