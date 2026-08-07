@@ -1,5 +1,6 @@
 import pandas as pd
 from scipy.stats import wilcoxon
+from pathlib import Path
 
 
 INPUT_FILE = (
@@ -7,7 +8,19 @@ INPUT_FILE = (
 )
 
 
-def compare(df, strategy_a, strategy_b):
+OUTPUT_FILE = (
+    "results/statistical_results.csv"
+)
+
+
+ALPHA = 0.05
+
+
+def compare(
+    df,
+    strategy_a,
+    strategy_b
+):
 
     a = df[
         df["strategy"] == strategy_a
@@ -23,14 +36,7 @@ def compare(df, strategy_a, strategy_b):
     )
 
 
-    print()
-    print("==============================")
-    print(
-        strategy_a,
-        "vs",
-        strategy_b
-    )
-    print("==============================")
+    results = []
 
 
     for metric in [
@@ -44,13 +50,18 @@ def compare(df, strategy_a, strategy_b):
         )
 
 
-        print(
-            metric,
-            "W:",
-            stat,
-            "p-value:",
-            p
+        results.append(
+            {
+                "strategy_a": strategy_a,
+                "strategy_b": strategy_b,
+                "metric": metric,
+                "wilcoxon_W": stat,
+                "p_value": p
+            }
         )
+
+
+    return results
 
 
 
@@ -61,20 +72,104 @@ def main():
     )
 
 
-    comparisons = [
-        ("sentence", "fixed"),
-        ("semantic", "fixed"),
-        ("topic", "fixed")
+    strategies = [
+        "fixed",
+        "sentence",
+        "semantic",
+        "topic"
     ]
+
+
+    comparisons = []
+
+
+    for i in range(
+        len(strategies)
+    ):
+
+        for j in range(
+            i + 1,
+            len(strategies)
+        ):
+
+            comparisons.append(
+                (
+                    strategies[i],
+                    strategies[j]
+                )
+            )
+
+
+
+    all_results = []
 
 
     for a, b in comparisons:
 
-        compare(
-            df,
-            a,
-            b
+        print(
+            f"Running: {a} vs {b}"
         )
+
+
+        all_results.extend(
+            compare(
+                df,
+                a,
+                b
+            )
+        )
+
+
+
+    results = pd.DataFrame(
+        all_results
+    )
+
+
+    # Bonferroni correction
+    number_of_tests = len(results)
+
+
+    results["bonferroni_alpha"] = (
+        ALPHA / number_of_tests
+    )
+
+
+    results["significant"] = (
+        results["p_value"]
+        <
+        results["bonferroni_alpha"]
+    )
+
+
+
+    Path(
+        "results"
+    ).mkdir(
+        exist_ok=True
+    )
+
+
+    results.to_csv(
+        OUTPUT_FILE,
+        index=False
+    )
+
+
+    print()
+    print("==============================")
+    print("Statistical Results")
+    print("==============================")
+
+    print(results)
+
+
+
+    print()
+    print(
+        "Saved:",
+        OUTPUT_FILE
+    )
 
 
 
