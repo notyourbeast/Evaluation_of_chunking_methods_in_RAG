@@ -1,0 +1,5 @@
+strategy,indexed_chunks,avg_total_latency_ms,avg_context_tokens,avg_context_characters
+fixed,3067,38.007,1357.8,6324.5667
+semantic,6073,33.1841,572.7,2741.3667
+sentence,2904,37.7532,1216.6333,5819.3667
+topic,4380,47.4304,798.3667,3822.6333
