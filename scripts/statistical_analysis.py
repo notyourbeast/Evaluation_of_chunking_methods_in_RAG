@@ -1,171 +1,383 @@
 import pandas as pd
+import numpy as np
+
 from scipy.stats import wilcoxon
-from pathlib import Path
 
 
-INPUT_FILE = (
-    "results/retrieval_results.csv"
-)
+# ==========================================================
+# Files
+# ==========================================================
+
+RETRIEVAL_FILE = "results/retrieval_results.csv"
+TOKEN_FILE = "results/token_usage_results.csv"
+
+OUTPUT_FILE = "results/statistical_results.csv"
 
 
-OUTPUT_FILE = (
-    "results/statistical_results.csv"
-)
-
+# ==========================================================
+# Configuration
+# ==========================================================
 
 ALPHA = 0.05
 
 
+RETRIEVAL_METRICS = [
+    "precision_at_5",
+    "recall_at_5",
+    "mrr"
+]
+
+
+EFFICIENCY_METRICS = [
+    "context_tokens"
+]
+
+
+STRATEGIES = [
+    "fixed",
+    "sentence",
+    "semantic",
+    "topic"
+]
+
+
+# ==========================================================
+# Wilcoxon + effect size
+# ==========================================================
+
+def run_wilcoxon(a, b):
+
+    differences = a - b
+
+    differences = differences[
+        differences != 0
+    ]
+
+    n = len(differences)
+
+
+    if n < 5:
+        return (
+            np.nan,
+            np.nan,
+            np.nan,
+            np.nan
+        )
+
+
+    try:
+
+        result = wilcoxon(
+            a,
+            b,
+            zero_method="wilcox"
+        )
+
+
+        W = result.statistic
+        p = result.pvalue
+
+
+        mean_W = (
+            n * (n + 1)
+        ) / 4
+
+
+        std_W = np.sqrt(
+            (
+                n *
+                (n + 1) *
+                (2*n + 1)
+            ) / 24
+        )
+
+
+        z = (
+            W - mean_W
+        ) / std_W
+
+
+        effect_r = (
+            abs(z)
+            /
+            np.sqrt(n)
+        )
+
+
+        return (
+            W,
+            z,
+            effect_r,
+            p
+        )
+
+
+    except Exception:
+
+        return (
+            np.nan,
+            np.nan,
+            np.nan,
+            np.nan
+        )
+
+
+
+# ==========================================================
+# Pairwise comparison
+# ==========================================================
+
 def compare(
     df,
     strategy_a,
-    strategy_b
+    strategy_b,
+    metric,
+    group
 ):
 
-    a = df[
-        df["strategy"] == strategy_a
-    ].sort_values(
-        "question_id"
+
+    a = (
+        df[
+            df["strategy"] == strategy_a
+        ]
+        .sort_values(
+            "question_id"
+        )[metric]
+        .reset_index(drop=True)
     )
 
 
-    b = df[
-        df["strategy"] == strategy_b
-    ].sort_values(
-        "question_id"
+    b = (
+        df[
+            df["strategy"] == strategy_b
+        ]
+        .sort_values(
+            "question_id"
+        )[metric]
+        .reset_index(drop=True)
+    )
+
+
+    print(
+        f"Running: {strategy_a} vs {strategy_b} {metric}"
+    )
+
+
+    W,z,effect,p = run_wilcoxon(
+        a,
+        b
+    )
+
+
+    return {
+
+        "strategy_a":
+            strategy_a,
+
+        "strategy_b":
+            strategy_b,
+
+        "metric":
+            metric,
+
+        "hypothesis_group":
+            group,
+
+        "wilcoxon_W":
+            W,
+
+        "z_score":
+            z,
+
+        "effect_size_r":
+            effect,
+
+        "p_value":
+            p
+
+    }
+
+
+
+# ==========================================================
+# Main
+# ==========================================================
+
+def main():
+
+
+    retrieval = pd.read_csv(
+        RETRIEVAL_FILE
+    )
+
+
+    # raw retrieval uses hit
+    if "recall_at_5" not in retrieval.columns:
+
+        retrieval = retrieval.rename(
+            columns={
+                "hit":
+                "recall_at_5"
+            }
+        )
+
+
+
+    tokens = pd.read_csv(
+        TOKEN_FILE
     )
 
 
     results = []
 
 
-    for metric in [
-        "mrr",
-        "hit"
-    ]:
 
-        stat, p = wilcoxon(
-            a[metric],
-            b[metric]
-        )
+    # -------------------------
+    # Retrieval comparisons
+    # -------------------------
+
+    for metric in RETRIEVAL_METRICS:
 
 
-        results.append(
-            {
-                "strategy_a": strategy_a,
-                "strategy_b": strategy_b,
-                "metric": metric,
-                "wilcoxon_W": stat,
-                "p_value": p
-            }
-        )
+        for i in range(len(STRATEGIES)):
+
+            for j in range(
+                i+1,
+                len(STRATEGIES)
+            ):
 
 
-    return results
+                results.append(
+                    compare(
+                        retrieval,
+                        STRATEGIES[i],
+                        STRATEGIES[j],
+                        metric,
+                        "retrieval"
+                    )
+                )
 
 
 
-def main():
+    # -------------------------
+    # Efficiency comparisons
+    # -------------------------
 
-    df = pd.read_csv(
-        INPUT_FILE
+    for metric in EFFICIENCY_METRICS:
+
+
+        for i in range(len(STRATEGIES)):
+
+            for j in range(
+                i+1,
+                len(STRATEGIES)
+            ):
+
+
+                results.append(
+                    compare(
+                        tokens,
+                        STRATEGIES[i],
+                        STRATEGIES[j],
+                        metric,
+                        "efficiency"
+                    )
+                )
+
+
+
+    df = pd.DataFrame(
+        results
     )
 
 
-    strategies = [
-        "fixed",
-        "sentence",
-        "semantic",
-        "topic"
+    # ==================================================
+    # Separate Bonferroni correction
+    # ==================================================
+
+    retrieval_tests = (
+        df["hypothesis_group"]
+        ==
+        "retrieval"
+    )
+
+
+    efficiency_tests = (
+        df["hypothesis_group"]
+        ==
+        "efficiency"
+    )
+
+
+    df.loc[
+        retrieval_tests,
+        "bonferroni_alpha"
+    ] = (
+        ALPHA /
+        retrieval_tests.sum()
+    )
+
+
+    df.loc[
+        efficiency_tests,
+        "bonferroni_alpha"
+    ] = (
+        ALPHA /
+        efficiency_tests.sum()
+    )
+
+
+    df["significant"] = (
+        df["p_value"]
+        <
+        df["bonferroni_alpha"]
+    )
+
+
+
+    df = df[
+        [
+            "strategy_a",
+            "strategy_b",
+            "metric",
+            "hypothesis_group",
+            "wilcoxon_W",
+            "z_score",
+            "effect_size_r",
+            "p_value",
+            "bonferroni_alpha",
+            "significant"
+        ]
     ]
 
 
-    comparisons = []
 
+    print()
 
-    for i in range(
-        len(strategies)
-    ):
-
-        for j in range(
-            i + 1,
-            len(strategies)
-        ):
-
-            comparisons.append(
-                (
-                    strategies[i],
-                    strategies[j]
-                )
-            )
-
-
-
-    all_results = []
-
-
-    for a, b in comparisons:
-
-        print(
-            f"Running: {a} vs {b}"
-        )
-
-
-        all_results.extend(
-            compare(
-                df,
-                a,
-                b
-            )
-        )
-
-
-
-    results = pd.DataFrame(
-        all_results
+    print(
+        "="*30
     )
 
-
-    # Bonferroni correction
-    number_of_tests = len(results)
-
-
-    results["bonferroni_alpha"] = (
-        ALPHA / number_of_tests
+    print(
+        "Statistical Results"
     )
 
-
-    results["significant"] = (
-        results["p_value"]
-        <
-        results["bonferroni_alpha"]
+    print(
+        "="*30
     )
 
+    print(df)
 
 
-    Path(
-        "results"
-    ).mkdir(
-        exist_ok=True
-    )
 
-
-    results.to_csv(
+    df.to_csv(
         OUTPUT_FILE,
         index=False
     )
 
 
     print()
-    print("==============================")
-    print("Statistical Results")
-    print("==============================")
 
-    print(results)
-
-
-
-    print()
     print(
         "Saved:",
         OUTPUT_FILE
@@ -174,5 +386,4 @@ def main():
 
 
 if __name__ == "__main__":
-
     main()
