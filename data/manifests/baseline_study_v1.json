@@ -1,0 +1,34 @@
+{
+  "manifest_version": 1,
+  "purpose": "Immutable audit record for the pre-expansion experiment. Do not use these records as inputs to the expanded study.",
+  "git_commit": "cae3ad0",
+  "evaluated_corpus": {
+    "path": "data/processed/wikipedia_processed.jsonl",
+    "record_count": 50,
+    "sha256": "3bc680ba0af69e396efc54562196d0580ef249c3792c8223bbd05be5b9dec5b9"
+  },
+  "raw_source_pool": {
+    "path": "data/raw/wiki_corpus.jsonl",
+    "record_count": 428,
+    "note": "Source pool only. It was not the corpus used by the baseline retrieval evaluation."
+  },
+  "query_set": {
+    "path": "data/raw/nq_filtered_queries.jsonl",
+    "record_count": 30,
+    "sha256": "136bb2626e662781fb632d33197f1360ec5774a8c0a90da4683046287a8de739",
+    "example_ids": ["4", "6", "9", "10", "12", "14", "15", "25", "27", "28", "31", "35", "37", "41", "44", "47", "52", "55", "60", "61", "62", "63", "70", "75", "76", "77", "85", "88", "91", "93"]
+  },
+  "retrieval_evaluation": {
+    "strategies": ["fixed", "sentence", "semantic", "topic"],
+    "observations": 120,
+    "results_path": "results/retrieval_results.csv",
+    "sha256": "854e34d83ca7c4d4429aedbfce37122134726348622165c89114c55e82bcd447"
+  },
+  "answer_level_evaluation": {
+    "unique_queries_per_strategy": 30,
+    "answer_instances_per_strategy": 60,
+    "note": "Two recorded answer-generation runs per query and strategy; they are not 60 distinct queries.",
+    "results_path": "results/ragas_results.csv",
+    "sha256": "033e4233f486a8828a2a8414954491cf020f9b680fcbad46af470c0abf98a906"
+  }
+}

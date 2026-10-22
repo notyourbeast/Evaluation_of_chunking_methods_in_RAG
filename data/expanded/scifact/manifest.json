@@ -1,0 +1,49 @@
+{
+  "dataset": "scifact",
+  "domain": "scientific claim retrieval",
+  "downloaded_at_utc": "2026-10-21T21:35:00.987156+00:00",
+  "source": {
+    "archive_url": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/scifact.zip",
+    "archive_path": "data/raw/beir_archives/scifact.zip",
+    "expected_md5": "5f7d1de60b170fc8027bb7898e2efca1",
+    "verified_md5": "5f7d1de60b170fc8027bb7898e2efca1",
+    "sha256": "536e14446a0ba56ed1398ab1055f39fe852686ecad24a6306c80c490fa8e0165"
+  },
+  "selection_rules": {
+    "corpus": "All non-empty documents in the official BEIR corpus.",
+    "queries": "All official test queries with at least one qrel score greater than zero whose relevant document is present in the official corpus archive.",
+    "qrel_binary_threshold": 1,
+    "arguana_self_match_exclusion_at_retrieval": false
+  },
+  "counts": {
+    "loaded_documents": 5183,
+    "loaded_queries": 1109,
+    "qrels": 339,
+    "qrels_with_corpus_document": 339,
+    "qrels_with_missing_corpus_document": 0,
+    "eligible_test_queries": 300,
+    "queries_without_positive_qrel": 809
+  },
+  "source_integrity": {
+    "dangling_qrels": [],
+    "handling": "All official qrels are preserved in qrels_test.tsv. Qrels whose document IDs are absent from the official corpus cannot be retrieved and are excluded only when determining evaluable queries and computing retrieval metrics."
+  },
+  "normalised_files": {
+    "documents": {
+      "path": "data/expanded/scifact/documents.jsonl",
+      "sha256": "9bcde731943627dd12b315b3d2b34630d0d27d390e65e66c489a84edbc6dc3df"
+    },
+    "queries": {
+      "path": "data/expanded/scifact/queries.jsonl",
+      "sha256": "c4d91678dd88b5f6a36523035a873bf01a228d51642931273a858398ec3f72e0"
+    },
+    "eligible_test_queries": {
+      "path": "data/expanded/scifact/eligible_test_queries.jsonl",
+      "sha256": "0d831c0086da73c4bd9a66490d5681703746fec1a8ed4b10fd091fda217cb667"
+    },
+    "qrels_test": {
+      "path": "data/expanded/scifact/qrels_test.tsv",
+      "sha256": "0864bb985e0ca2367ba217977e72004d549054b2b06666ed9d4825ac7c21284c"
+    }
+  }
+}

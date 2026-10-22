@@ -1,0 +1,75 @@
+{
+  "dataset": "arguana",
+  "domain": "counterargument retrieval",
+  "downloaded_at_utc": "2026-10-21T21:34:47.128407+00:00",
+  "source": {
+    "archive_url": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/arguana.zip",
+    "archive_path": "data/raw/beir_archives/arguana.zip",
+    "expected_md5": "8ad3e3c2a5867cdced806d6503f29b99",
+    "verified_md5": "8ad3e3c2a5867cdced806d6503f29b99",
+    "sha256": "cfdf79adce27a401b3cd3ea267903134dbfab2c6afeb95d7fe5724a00bf7557b"
+  },
+  "selection_rules": {
+    "corpus": "All non-empty documents in the official BEIR corpus.",
+    "queries": "All official test queries with at least one qrel score greater than zero whose relevant document is present in the official corpus archive.",
+    "qrel_binary_threshold": 1,
+    "arguana_self_match_exclusion_at_retrieval": true
+  },
+  "counts": {
+    "loaded_documents": 8674,
+    "loaded_queries": 1406,
+    "qrels": 1406,
+    "qrels_with_corpus_document": 1401,
+    "qrels_with_missing_corpus_document": 5,
+    "eligible_test_queries": 1401,
+    "queries_without_positive_qrel": 5
+  },
+  "source_integrity": {
+    "dangling_qrels": [
+      {
+        "query_id": "test-free-speech-debate-yfsdfkhbwu-con03a",
+        "document_id": "test-free-speech-debate-yfsdfkhbwu-con03b",
+        "score": 1
+      },
+      {
+        "query_id": "test-education-ufsdfkhbwu-con03a",
+        "document_id": "test-education-ufsdfkhbwu-con03b",
+        "score": 1
+      },
+      {
+        "query_id": "test-politics-dhwem-pro06a",
+        "document_id": "test-politics-dhwem-pro06b",
+        "score": 1
+      },
+      {
+        "query_id": "test-science-sghwbdgmo-con03a",
+        "document_id": "test-science-sghwbdgmo-con03b",
+        "score": 1
+      },
+      {
+        "query_id": "test-society-asfhwapg-con04a",
+        "document_id": "test-society-asfhwapg-con04b",
+        "score": 1
+      }
+    ],
+    "handling": "All official qrels are preserved in qrels_test.tsv. Qrels whose document IDs are absent from the official corpus cannot be retrieved and are excluded only when determining evaluable queries and computing retrieval metrics."
+  },
+  "normalised_files": {
+    "documents": {
+      "path": "data/expanded/arguana/documents.jsonl",
+      "sha256": "4a56cf57643f95a8f81b360847c945ffebdb515b3c1c9f5146f5d2c4c2dfeb53"
+    },
+    "queries": {
+      "path": "data/expanded/arguana/queries.jsonl",
+      "sha256": "2f3473ad0f5b48e01064c85d6a42a400b4b16bae387d057238ea03d0b9e224c0"
+    },
+    "eligible_test_queries": {
+      "path": "data/expanded/arguana/eligible_test_queries.jsonl",
+      "sha256": "d2f9062e71e36805c908d2720fc9ebd9b60bf1eb855978daccd3cca842399938"
+    },
+    "qrels_test": {
+      "path": "data/expanded/arguana/qrels_test.tsv",
+      "sha256": "0c47b481fa8b47fb9ca5e74bc8a017bdea14518c0e4a5d21345291180b3aca76"
+    }
+  }
+}

@@ -25,3 +25,10 @@ models/*.index
 # Data (optional)
 # Uncomment if you don't want datasets in GitHub
 # data/raw/
+
+# Downloaded and normalised BEIR benchmark data. Dataset manifests remain tracked.
+data/raw/beir_archives/
+data/expanded/*/documents.jsonl
+data/expanded/*/queries.jsonl
+data/expanded/*/eligible_test_queries.jsonl
+data/expanded/*/qrels_test.tsv

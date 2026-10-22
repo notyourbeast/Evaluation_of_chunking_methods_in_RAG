@@ -1,0 +1,49 @@
+{
+  "dataset": "nfcorpus",
+  "domain": "biomedical and nutrition information retrieval",
+  "downloaded_at_utc": "2026-10-21T21:35:01.099530+00:00",
+  "source": {
+    "archive_url": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/nfcorpus.zip",
+    "archive_path": "data/raw/beir_archives/nfcorpus.zip",
+    "expected_md5": "a89dba18a62ef92f7d323ec890a0d38d",
+    "verified_md5": "a89dba18a62ef92f7d323ec890a0d38d",
+    "sha256": "efe5be03f8c5b86a5870102d0599d227c8c6e2484328e68c6522560385671b0b"
+  },
+  "selection_rules": {
+    "corpus": "All non-empty documents in the official BEIR corpus.",
+    "queries": "All official test queries with at least one qrel score greater than zero whose relevant document is present in the official corpus archive.",
+    "qrel_binary_threshold": 1,
+    "arguana_self_match_exclusion_at_retrieval": false
+  },
+  "counts": {
+    "loaded_documents": 3633,
+    "loaded_queries": 3237,
+    "qrels": 12334,
+    "qrels_with_corpus_document": 12334,
+    "qrels_with_missing_corpus_document": 0,
+    "eligible_test_queries": 323,
+    "queries_without_positive_qrel": 2914
+  },
+  "source_integrity": {
+    "dangling_qrels": [],
+    "handling": "All official qrels are preserved in qrels_test.tsv. Qrels whose document IDs are absent from the official corpus cannot be retrieved and are excluded only when determining evaluable queries and computing retrieval metrics."
+  },
+  "normalised_files": {
+    "documents": {
+      "path": "data/expanded/nfcorpus/documents.jsonl",
+      "sha256": "706085b48f8c56a349aafeededf7042b1c89a91c5dcdd89500a069dfd64580b0"
+    },
+    "queries": {
+      "path": "data/expanded/nfcorpus/queries.jsonl",
+      "sha256": "50831e2591cf84041098e1efbeb5d696aa6514932f51cef2c53ac45c289279c5"
+    },
+    "eligible_test_queries": {
+      "path": "data/expanded/nfcorpus/eligible_test_queries.jsonl",
+      "sha256": "f6334db5d023bf2fa88beb45f65326613c9ed56b4775a53567a1e135703ab4d7"
+    },
+    "qrels_test": {
+      "path": "data/expanded/nfcorpus/qrels_test.tsv",
+      "sha256": "f8fba6ef3d4dd9c3a242a8ba4ae38276fc3622fce7dcbae764766d564542fd2a"
+    }
+  }
+}

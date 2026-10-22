@@ -1,0 +1,58 @@
+{
+  "protocol_version": "expanded_retrieval_v1",
+  "seed": 20261021,
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "token_counting": {
+    "tokenizer": "embedding-model tokenizer",
+    "special_tokens_in_chunk_budget": false,
+    "encoder_limit_rule": "target chunk tokens plus the tokenizer-required special tokens"
+  },
+  "index": {
+    "type": "faiss.IndexFlatIP",
+    "normalise_embeddings": true,
+    "document_score_aggregation": "maximum chunk inner-product score"
+  },
+  "evaluation": {
+    "cutoffs": [1, 3, 5, 10],
+    "binary_relevance_threshold": 1,
+    "unit_of_ranking": "document",
+    "arguana_exclude_query_document": true,
+    "metrics": ["hit_rate", "recall", "precision", "reciprocal_rank", "ndcg"]
+  },
+  "chunking": {
+    "fixed": {
+      "target_tokens": 256,
+      "overlap_tokens": 32
+    },
+    "sentence": {
+      "target_tokens": 256,
+      "overlap_tokens": 0,
+      "long_sentence_segment_limit_tokens": 240
+    },
+    "semantic": {
+      "target_tokens": 256,
+      "overlap_tokens": 0,
+      "minimum_chunk_tokens": 100,
+      "long_sentence_segment_limit_tokens": 120,
+      "adjacent_sentence_similarity_threshold": 0.75
+    },
+    "topic": {
+      "target_tokens": 256,
+      "overlap_tokens": 0,
+      "minimum_chunk_tokens": 100,
+      "long_sentence_segment_limit_tokens": 120,
+      "umap": {
+        "n_neighbors": 15,
+        "n_components": 5,
+        "min_dist": 0.0,
+        "metric": "cosine"
+      },
+      "hdbscan": {
+        "min_cluster_size": 10,
+        "metric": "euclidean",
+        "cluster_selection_method": "eom",
+        "core_dist_n_jobs": 1
+      }
+    }
+  }
+}

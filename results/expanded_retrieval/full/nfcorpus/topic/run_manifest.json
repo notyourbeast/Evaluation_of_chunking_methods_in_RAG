@@ -1,0 +1,46 @@
+{
+  "protocol_version": "expanded_retrieval_v1",
+  "run_kind": "full",
+  "warning": null,
+  "created_at_utc": "2026-10-22T11:40:16.251945+00:00",
+  "dataset": "nfcorpus",
+  "strategy": "topic",
+  "source_dataset_manifest_sha256": "997cae187f3745910b8f6e7339af17a27d7167b48f786f9cee001ade4f333d2e",
+  "source_archive_sha256": "efe5be03f8c5b86a5870102d0599d227c8c6e2484328e68c6522560385671b0b",
+  "config_path": "config/expanded_retrieval_v1.json",
+  "config_sha256": "543bd72568dde9dc9dcbe55f50a0ab19954a51ee454babafde0c43aba34ff187",
+  "seed": 20261021,
+  "counts": {
+    "documents": 3633,
+    "queries": 323,
+    "chunks": 10484,
+    "per_query_metric_rows": 1292,
+    "chunk_token_count": {
+      "minimum": 2,
+      "maximum": 256,
+      "mean": 123.14784433422358
+    }
+  },
+  "environment": {
+    "python": "3.11.15 | packaged by conda-forge | (main, Mar  5 2026, 16:59:26) [Clang 19.1.7 ]",
+    "platform": "macOS-15.7.1-arm64-arm-64bit",
+    "machine": "arm64",
+    "processor": "arm",
+    "packages": {
+      "faiss": "1.8.0",
+      "numpy": "1.26.4",
+      "spacy": "3.7.5",
+      "sentence_transformers": "3.0.1",
+      "transformers": "4.43.4"
+    },
+    "runtime_controls": {
+      "OMP_NUM_THREADS": "1",
+      "OPENBLAS_NUM_THREADS": "1",
+      "MKL_NUM_THREADS": "1",
+      "NUMBA_CACHE_DIR": "/Users/sai/Desktop/RAG/.cache/numba",
+      "TOKENIZERS_PARALLELISM": "false"
+    }
+  },
+  "embedding_max_seq_length": 258,
+  "elapsed_seconds": 311.01989533301094
+}
