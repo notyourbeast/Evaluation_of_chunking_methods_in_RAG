@@ -1,49 +1,42 @@
-# RAG Chunking Strategy Evaluation Study
+# Chunking Strategies for Dense Retrieval
 
-## Research Objective
+This repository evaluates fixed-size, sentence-based, semantic, and topic-aware chunking in a controlled dense-retrieval pipeline. The main study reports document-level retrieval effectiveness and indexing footprint; it does not make claims about generated-answer correctness.
 
-Investigating how document chunking strategies influence Retrieval-Augmented Generation (RAG) performance.
+## Expanded evaluation
 
-## Current Stage
+The completed expanded evaluation uses the SciFact, NFCorpus, and ArguAna BEIR collections:
 
-Week 1 completed:
-- Environment setup
-- Local LLM deployment
-- Dataset preparation
-- Validation pipeline
+- 17,490 documents across the three corpora;
+- 2,024 evaluable test queries with an available relevant document;
+- a shared `sentence-transformers/all-MiniLM-L6-v2` embedding model and exact FAISS inner-product search;
+- document ranking by the maximum score among each document's chunks;
+- hit rate, recall, precision, reciprocal rank, and nDCG at ranks 1, 3, 5, and 10.
 
-## Current Dataset
+Strategies are compared within each collection using query-level paired Wilcoxon signed-rank tests, percentile-bootstrap confidence intervals, signed rank-biserial correlations, and Holm correction across the complete family of 360 comparisons. Collections are not pooled.
 
-Wikipedia:
-- 4 articles (pipeline validation corpus)
+## Reproducing the analysis
 
-Natural Questions:
-- 200 evaluation queries
+The corpus and query-selection protocol is documented in `data/manifests/expanded_study_protocol_v1.md`. The inferential procedure is documented in `data/manifests/expanded_statistical_analysis_protocol_v1.md`.
 
-## Planned Work
-
-- Build baseline RAG pipeline
-- Compare chunking strategies
-- Evaluate using RAGAS metrics
-
-## RAGAS evaluation
-
-`scripts/evaluate_ragas.py` evaluates generated answers with faithfulness,
-answer relevancy, context precision, and context recall. It uses the local
-`qwen2.5:7b` Ollama model by default and records the question ID alongside
-each metric so results are traceable.
-
-Start Ollama, then run a one-row smoke test before a full strategy evaluation:
+After the expanded retrieval runs are available, generate analysis tables with:
 
 ```bash
-ollama serve
-conda run -n rag_chunking python scripts/evaluate_ragas.py \
-  --strategy fixed --limit 1
+conda run -n rag_chunking python scripts/analyze_expanded_retrieval.py
+conda run -n rag_chunking python scripts/create_expanded_retrieval_tables.py
 ```
 
-Run the same command without `--limit` for each strategy (`fixed`, `sentence`,
-`semantic`, and `topic`). A rerun replaces that strategy's previous rows in
-`results/ragas_results.csv` and regenerates `results/ragas_summary.csv`.
-The evaluator stops on missing scores by default; use
-`--allow-partial-results` only when investigating a failure, not for final
-comparisons.
+Generate the publication figures with:
+
+```bash
+MPLCONFIGDIR="$PWD/.cache/matplotlib" conda run -n rag_chunking \
+  python scripts/create_expanded_retrieval_figures.py
+```
+
+## Results
+
+- Full run outputs: `results/expanded_retrieval/full/`
+- Descriptive and inferential outputs: `results/expanded_retrieval/analysis/`
+- Reader-facing retrieval tables: `results/expanded_retrieval/analysis/thesis_tables/retrieval_results_tables.md`
+- Publication figures: `results/expanded_retrieval/analysis/figures/`
+
+The RAGAS scripts and outputs are retained as exploratory material. They are not part of the main retrieval conclusions because the available runs contain parsing failures and partial-result handling.
