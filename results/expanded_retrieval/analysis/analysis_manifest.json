@@ -1,0 +1,36 @@
+{
+  "analysis_protocol": "data/manifests/expanded_statistical_analysis_protocol_v1.md",
+  "input_root": "results/expanded_retrieval/full",
+  "datasets": [
+    "scifact",
+    "nfcorpus",
+    "arguana"
+  ],
+  "strategies": [
+    "fixed",
+    "sentence",
+    "semantic",
+    "topic"
+  ],
+  "metrics": [
+    "hit_rate",
+    "recall",
+    "precision",
+    "reciprocal_rank",
+    "ndcg"
+  ],
+  "cutoffs": [
+    1,
+    3,
+    5,
+    10
+  ],
+  "bootstrap_resamples": 10000,
+  "bootstrap_seed": 20261022,
+  "pairwise_tests": 360,
+  "p_value_adjustment": "Holm across all planned pairwise tests",
+  "outputs": [
+    "descriptive_metrics.csv",
+    "pairwise_comparisons.csv"
+  ]
+}
