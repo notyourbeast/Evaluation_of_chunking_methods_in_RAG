@@ -43,6 +43,7 @@ def tracked_paths() -> list[Path]:
         PROJECT_ROOT / "config" / "fixed_overlap_ablation_v1.json",
         PROJECT_ROOT / "data" / "manifests" / "fixed_overlap_ablation_protocol_v1.md",
         PROJECT_ROOT / "data" / "manifests" / "retrieved_token_budget_protocol_v1.md",
+        PROJECT_ROOT / "data" / "manifests" / "paired_randomisation_sensitivity_protocol_v1.md",
         PROJECT_ROOT / "data" / "manifests" / "expanded_input_inventory_v1.csv",
         PROJECT_ROOT / "data" / "manifests" / "expanded_input_checksums_v1.csv",
         AUDIT_ROOT / "expanded_input_and_relevance_audit_v1.json",
@@ -62,6 +63,9 @@ def tracked_paths() -> list[Path]:
         RESULTS_ROOT / "token_budget_v1" / "analysis" / "analysis_manifest.json",
         RESULTS_ROOT / "token_budget_v1" / "analysis" / "descriptive_metrics.csv",
         RESULTS_ROOT / "token_budget_v1" / "analysis" / "pairwise_comparisons.csv",
+        RESULTS_ROOT / "randomisation_sensitivity_v1" / "analysis_manifest.json",
+        RESULTS_ROOT / "randomisation_sensitivity_v1" / "primary_retrieval_randomisation.csv",
+        RESULTS_ROOT / "randomisation_sensitivity_v1" / "token_budget_randomisation.csv",
         PROJECT_ROOT / "scripts" / "run_beir_retrieval.py",
         PROJECT_ROOT / "scripts" / "analyze_expanded_retrieval.py",
         PROJECT_ROOT / "scripts" / "benchmark_expanded_efficiency.py",
@@ -72,6 +76,7 @@ def tracked_paths() -> list[Path]:
         PROJECT_ROOT / "scripts" / "analyze_fixed_overlap_ablation.py",
         PROJECT_ROOT / "scripts" / "run_token_budget_retrieval.py",
         PROJECT_ROOT / "scripts" / "analyze_token_budget_retrieval.py",
+        PROJECT_ROOT / "scripts" / "analyze_paired_randomisation_sensitivity.py",
     ]
     for dataset in ("scifact", "nfcorpus", "arguana"):
         for strategy in ("fixed", "sentence", "semantic", "topic"):

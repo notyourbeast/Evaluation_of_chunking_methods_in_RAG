@@ -14,6 +14,8 @@ The completed expanded evaluation uses the SciFact, NFCorpus, and ArguAna BEIR c
 
 Strategies are compared within each collection using query-level paired Wilcoxon signed-rank tests, percentile-bootstrap confidence intervals, signed rank-biserial correlations, and Holm correction across the complete family of 360 comparisons. Collections are not pooled.
 
+A Monte Carlo paired sign-flip randomisation sensitivity analysis is also supplied for the primary and token-budget families. It tests mean paired differences rather than Wilcoxon signed ranks, so its Holm decisions are retained alongside—not substituted for—the primary analysis.
+
 ## Reproducing the analysis
 
 The corpus and query-selection protocol is documented in `data/manifests/expanded_study_protocol_v1.md`. The inferential procedure is documented in `data/manifests/expanded_statistical_analysis_protocol_v1.md`.
@@ -45,6 +47,7 @@ MPLCONFIGDIR="$PWD/.cache/matplotlib" conda run -n rag_chunking \
 - Efficiency trial summaries: `results/expanded_retrieval/efficiency_v2/analysis/`
 - Fixed-overlap ablation: `results/expanded_retrieval/ablations/fixed_overlap_v1/`
 - Common retrieved-token-budget evaluation: `results/expanded_retrieval/token_budget_v1/`
+- Paired-randomisation sensitivity outputs: `results/expanded_retrieval/randomisation_sensitivity_v1/`
 - Segmentation length/boundary summaries and deterministic excerpts: `results/expanded_retrieval/chunk_metadata/`
 - Input, environment, and artefact-checksum audits: `results/expanded_retrieval/audits/`
 

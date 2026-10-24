@@ -1,0 +1,11 @@
+{
+  "protocol": "data/manifests/paired_randomisation_sensitivity_protocol_v1.md",
+  "test": "two-sided Monte Carlo paired sign-flip randomisation test of the mean paired difference",
+  "resamples": 20000,
+  "base_seed": 20261024,
+  "families": {
+    "primary_retrieval": 360,
+    "token_budget": 180
+  },
+  "holm_adjustment": "Applied separately within each family."
+}

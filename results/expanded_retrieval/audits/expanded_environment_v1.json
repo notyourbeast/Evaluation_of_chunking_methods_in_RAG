@@ -1,6 +1,6 @@
 {
-  "git_head_at_capture": "81c0c9367159cb2e3699ae4b81b42d25ebd1584e",
-  "git_status_porcelain_at_capture": "M README.md\n M results/expanded_retrieval/audits/expanded_environment_v1.json\n M results/expanded_retrieval/audits/expanded_final_artifact_checksums_v1.csv\n M scripts/capture_expanded_reproducibility.py\n M scripts/run_beir_retrieval.py\n?? config/fixed_overlap_ablation_v1.json\n?? data/manifests/fixed_overlap_ablation_protocol_v1.md\n?? data/manifests/retrieved_token_budget_protocol_v1.md\n?? model_not_included.txt\n?? results/expanded_retrieval/ablations/\n?? results/expanded_retrieval/token_budget_v1/\n?? results/figures/\n?? results/generation_quality.csv\n?? scripts/analyze_fixed_overlap_ablation.py\n?? scripts/analyze_token_budget_retrieval.py\n?? scripts/create_figures.py\n?? scripts/evaluate_generation_quality.py\n?? scripts/run_token_budget_retrieval.py",
+  "git_head_at_capture": "48143f3e949bebc0da8b52c1207199bed3593fb6",
+  "git_status_porcelain_at_capture": "M README.md\n M scripts/capture_expanded_reproducibility.py\n?? data/manifests/paired_randomisation_sensitivity_protocol_v1.md\n?? model_not_included.txt\n?? results/expanded_retrieval/randomisation_sensitivity_v1/\n?? results/figures/\n?? results/generation_quality.csv\n?? scripts/analyze_paired_randomisation_sensitivity.py\n?? scripts/create_figures.py\n?? scripts/evaluate_generation_quality.py",
   "machine": "arm64",
   "model": {
     "identifier": "sentence-transformers/all-MiniLM-L6-v2",
