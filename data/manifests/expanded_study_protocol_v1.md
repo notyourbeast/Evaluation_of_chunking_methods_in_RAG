@@ -80,8 +80,9 @@ randomised operation must use the fixed seed `20261021`.
 
 ## Planned analyses
 
-The final analysis will report per-dataset and pooled results separately. It
-will not pool benchmark scores without also showing the dataset-level values.
+The final analysis will report results separately for each dataset. Benchmark
+scores are not pooled for descriptive summaries or hypothesis tests because
+the collections differ in domain, relevance structure, and query task.
 For every configuration pair and metric, it will report paired effect sizes,
 bootstrap confidence intervals for the paired difference, test statistics,
 unadjusted p-values, adjusted p-values, and the count of usable paired

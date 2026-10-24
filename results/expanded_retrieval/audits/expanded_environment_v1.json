@@ -1,6 +1,6 @@
 {
-  "git_head_at_capture": "48143f3e949bebc0da8b52c1207199bed3593fb6",
-  "git_status_porcelain_at_capture": "M README.md\n M scripts/capture_expanded_reproducibility.py\n?? data/manifests/paired_randomisation_sensitivity_protocol_v1.md\n?? model_not_included.txt\n?? results/expanded_retrieval/randomisation_sensitivity_v1/\n?? results/figures/\n?? results/generation_quality.csv\n?? scripts/analyze_paired_randomisation_sensitivity.py\n?? scripts/create_figures.py\n?? scripts/evaluate_generation_quality.py",
+  "git_head_at_capture": "c07574c79dbfeb01d924fe62bdad2dec4d2cd384",
+  "git_status_porcelain_at_capture": "M data/manifests/expanded_study_protocol_v1.md\n?? model_not_included.txt\n?? results/figures/\n?? results/generation_quality.csv\n?? scripts/create_figures.py\n?? scripts/evaluate_generation_quality.py",
   "machine": "arm64",
   "model": {
     "identifier": "sentence-transformers/all-MiniLM-L6-v2",
