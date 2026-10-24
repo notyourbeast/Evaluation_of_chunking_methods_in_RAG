@@ -55,6 +55,7 @@ RESULTS_ROOT = PROJECT_ROOT / "results" / "expanded_retrieval"
 TOPIC_ASSIGNMENT_CACHE_ROOT = RESULTS_ROOT / "topic_assignment_cache"
 DATASETS = ("scifact", "nfcorpus", "arguana")
 STRATEGIES = ("fixed", "sentence", "semantic", "topic")
+ABLATION_STRATEGIES = ("fixed_no_overlap",)
 
 
 def sha256(path: Path) -> str:
@@ -223,7 +224,7 @@ def make_chunk(
     }
 
 
-def fixed_chunks(documents: list[dict[str, Any]], tokenizer: Any, settings: dict[str, Any]) -> list[dict[str, Any]]:
+def fixed_chunks(documents: list[dict[str, Any]], tokenizer: Any, settings: dict[str, Any], strategy: str = "fixed") -> list[dict[str, Any]]:
     size, overlap = settings["target_tokens"], settings["overlap_tokens"]
     chunks = []
     for document in documents:
@@ -234,7 +235,7 @@ def fixed_chunks(documents: list[dict[str, Any]], tokenizer: Any, settings: dict
                 chunks.append(
                     make_chunk(
                         document["document_id"],
-                        "fixed",
+                        strategy,
                         number,
                         decoded,
                         tokenizer,
@@ -504,8 +505,8 @@ def create_chunks(
     topic_assignment_cache_path: Path | None = None, topic_assignment_provenance: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     settings = config["chunking"][strategy]
-    if strategy == "fixed":
-        return fixed_chunks(documents, tokenizer, settings)
+    if strategy in {"fixed", "fixed_no_overlap"}:
+        return fixed_chunks(documents, tokenizer, settings, strategy)
     if strategy == "sentence":
         sentence_map = sentence_lists(documents, nlp, tokenizer, settings["long_sentence_segment_limit_tokens"])
         return grouped_sentence_chunks(documents, tokenizer, sentence_map, "sentence", settings)
@@ -601,7 +602,7 @@ def package_versions() -> dict[str, str]:
 
 def run(
     dataset: str, strategy: str, config: dict[str, Any], max_documents: int | None, max_queries: int | None, output_root: Path,
-    overwrite: bool, refresh_topic_assignments: bool = False,
+    overwrite: bool, refresh_topic_assignments: bool = False, config_path: Path = CONFIG_PATH,
 ) -> Path:
     documents, queries, qrels, source_manifest = load_dataset(dataset)
     documents, queries, qrels = deterministic_smoke_subset(documents, queries, qrels, max_documents, max_queries)
@@ -649,8 +650,8 @@ def run(
         "strategy": strategy,
         "source_dataset_manifest_sha256": sha256(DATA_ROOT / dataset / "manifest.json"),
         "source_archive_sha256": source_manifest["source"]["sha256"],
-        "config_path": str(CONFIG_PATH.relative_to(PROJECT_ROOT)),
-        "config_sha256": sha256(CONFIG_PATH),
+        "config_path": str(config_path.resolve().relative_to(PROJECT_ROOT)),
+        "config_sha256": sha256(config_path),
         "seed": config["seed"],
         "counts": {
             "documents": len(documents),
@@ -685,7 +686,8 @@ def run(
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dataset", choices=[*DATASETS, "all"], default="all")
-    parser.add_argument("--strategy", choices=[*STRATEGIES, "all"], default="all")
+    parser.add_argument("--strategy", choices=[*STRATEGIES, *ABLATION_STRATEGIES, "all"], default="all")
+    parser.add_argument("--config-path", type=Path, default=CONFIG_PATH, help="Versioned retrieval configuration to run.")
     parser.add_argument("--max-documents", type=int, help="Smoke-run document limit; never use its outputs as study results.")
     parser.add_argument("--max-queries", type=int, help="Smoke-run query limit; never use its outputs as study results.")
     parser.add_argument("--output-root", type=Path, default=RESULTS_ROOT)
@@ -695,7 +697,8 @@ def main() -> None:
     args = parser.parse_args()
     if (args.max_documents is not None and args.max_documents <= 0) or (args.max_queries is not None and args.max_queries <= 0):
         parser.error("Smoke limits must be positive")
-    config = load_config(CONFIG_PATH)
+    config_path = args.config_path.resolve()
+    config = load_config(config_path)
     datasets = DATASETS if args.dataset == "all" else (args.dataset,)
     strategies = STRATEGIES if args.strategy == "all" else (args.strategy,)
     for dataset in datasets:
@@ -706,7 +709,7 @@ def main() -> None:
             else:
                 output = run(
                     dataset, strategy, config, args.max_documents, args.max_queries, args.output_root, args.overwrite,
-                    refresh_topic_assignments=args.refresh_topic_assignments,
+                    refresh_topic_assignments=args.refresh_topic_assignments, config_path=config_path,
                 )
                 print(f"Completed {dataset}/{strategy}: {output}")
 

@@ -20,6 +20,8 @@ The corpus and query-selection protocol is documented in `data/manifests/expande
 
 The efficiency protocol, frozen topic-assignment approach, input/relevance audit, package versions, and final artefact checksums are included under `data/manifests/` and `results/expanded_retrieval/audits/`. Topic-model fitting was not fully deterministic for every collection; the reported topic runs therefore reuse sentence-hash-validated, persisted assignment files rather than claiming deterministic refitting.
 
+Two controlled supplements address major configuration confounds. The overlap ablation holds the fixed 256-token target constant while changing its overlap from 32 to 0 tokens. The retrieved-token-budget evaluation admits a strict ranked prefix of document-representative chunks under common 512- and 1,024-token embedding-token budgets. Both remain document-level retrieval analyses and do not evaluate generated answers.
+
 After the expanded retrieval runs are available, generate analysis tables with:
 
 ```bash
@@ -41,6 +43,8 @@ MPLCONFIGDIR="$PWD/.cache/matplotlib" conda run -n rag_chunking \
 - Reader-facing retrieval tables: `results/expanded_retrieval/analysis/thesis_tables/retrieval_results_tables.md`
 - Publication figures: `results/expanded_retrieval/analysis/figures/`
 - Efficiency trial summaries: `results/expanded_retrieval/efficiency_v2/analysis/`
+- Fixed-overlap ablation: `results/expanded_retrieval/ablations/fixed_overlap_v1/`
+- Common retrieved-token-budget evaluation: `results/expanded_retrieval/token_budget_v1/`
 - Segmentation length/boundary summaries and deterministic excerpts: `results/expanded_retrieval/chunk_metadata/`
 - Input, environment, and artefact-checksum audits: `results/expanded_retrieval/audits/`
 

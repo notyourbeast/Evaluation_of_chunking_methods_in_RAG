@@ -1,0 +1,38 @@
+{
+  "protocol": "data/manifests/retrieved_token_budget_protocol_v1.md",
+  "created_at_utc": "2026-10-24T21:09:56.085235+00:00",
+  "dataset": "nfcorpus",
+  "strategy": "topic",
+  "config_path": "config/expanded_retrieval_v1.json",
+  "config_sha256": "543bd72568dde9dc9dcbe55f50a0ab19954a51ee454babafde0c43aba34ff187",
+  "source_archive_sha256": "efe5be03f8c5b86a5870102d0599d227c8c6e2484328e68c6522560385671b0b",
+  "budgets": [
+    512,
+    1024
+  ],
+  "budget_rule": "strict rank-preserving prefix of document representative chunks",
+  "counts": {
+    "documents": 3633,
+    "queries": 323,
+    "chunks": 10484,
+    "per_query_budget_rows": 646
+  },
+  "topic_assignment_provenance": {
+    "source": "validated_cached_assignments",
+    "cache_path": "results/expanded_retrieval/topic_assignment_cache/nfcorpus_543bd72568dde9dc.csv",
+    "sentence_records": 42250,
+    "sentence_sequence_sha256": "1a7a1a67fead79e4da5825616ec61961a52ce48643b4303ae88203ae796f6c3c"
+  },
+  "environment": {
+    "python": "3.11.15 | packaged by conda-forge | (main, Mar  5 2026, 16:59:26) [Clang 19.1.7 ]",
+    "platform": "darwin",
+    "packages": {
+      "faiss": "1.8.0",
+      "numpy": "1.26.4",
+      "spacy": "3.7.5",
+      "sentence_transformers": "3.0.1",
+      "transformers": "4.43.4"
+    }
+  },
+  "elapsed_seconds": 195.1311708749854
+}

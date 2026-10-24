@@ -1,0 +1,30 @@
+{
+  "protocol_version": "fixed_overlap_ablation_v1",
+  "parent_configuration": "config/expanded_retrieval_v1.json",
+  "parent_configuration_sha256": "543bd72568dde9dc9dcbe55f50a0ab19954a51ee454babafde0c43aba34ff187",
+  "seed": 20261021,
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "token_counting": {
+    "tokenizer": "embedding-model tokenizer",
+    "special_tokens_in_chunk_budget": false,
+    "encoder_limit_rule": "target chunk tokens plus the tokenizer-required special tokens"
+  },
+  "index": {
+    "type": "faiss.IndexFlatIP",
+    "normalise_embeddings": true,
+    "document_score_aggregation": "maximum chunk inner-product score"
+  },
+  "evaluation": {
+    "cutoffs": [1, 3, 5, 10],
+    "binary_relevance_threshold": 1,
+    "unit_of_ranking": "document",
+    "arguana_exclude_query_document": true,
+    "metrics": ["hit_rate", "recall", "precision", "reciprocal_rank", "ndcg"]
+  },
+  "chunking": {
+    "fixed_no_overlap": {
+      "target_tokens": 256,
+      "overlap_tokens": 0
+    }
+  }
+}

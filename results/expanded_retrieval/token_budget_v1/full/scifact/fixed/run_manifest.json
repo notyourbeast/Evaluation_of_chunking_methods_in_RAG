@@ -1,0 +1,33 @@
+{
+  "protocol": "data/manifests/retrieved_token_budget_protocol_v1.md",
+  "created_at_utc": "2026-10-24T20:43:25.250930+00:00",
+  "dataset": "scifact",
+  "strategy": "fixed",
+  "config_path": "config/expanded_retrieval_v1.json",
+  "config_sha256": "543bd72568dde9dc9dcbe55f50a0ab19954a51ee454babafde0c43aba34ff187",
+  "source_archive_sha256": "536e14446a0ba56ed1398ab1055f39fe852686ecad24a6306c80c490fa8e0165",
+  "budgets": [
+    512,
+    1024
+  ],
+  "budget_rule": "strict rank-preserving prefix of document representative chunks",
+  "counts": {
+    "documents": 5183,
+    "queries": 300,
+    "chunks": 10400,
+    "per_query_budget_rows": 600
+  },
+  "topic_assignment_provenance": null,
+  "environment": {
+    "python": "3.11.15 | packaged by conda-forge | (main, Mar  5 2026, 16:59:26) [Clang 19.1.7 ]",
+    "platform": "darwin",
+    "packages": {
+      "faiss": "1.8.0",
+      "numpy": "1.26.4",
+      "spacy": "3.7.5",
+      "sentence_transformers": "3.0.1",
+      "transformers": "4.43.4"
+    }
+  },
+  "elapsed_seconds": 88.29377929202747
+}

@@ -1,0 +1,30 @@
+{
+  "protocol": "data/manifests/retrieved_token_budget_protocol_v1.md",
+  "input_root": "results/expanded_retrieval/token_budget_v1/full",
+  "datasets": [
+    "scifact",
+    "nfcorpus",
+    "arguana"
+  ],
+  "strategies": [
+    "fixed",
+    "sentence",
+    "semantic",
+    "topic"
+  ],
+  "budgets": [
+    512,
+    1024
+  ],
+  "metrics": [
+    "hit_rate",
+    "recall",
+    "precision",
+    "reciprocal_rank",
+    "ndcg"
+  ],
+  "bootstrap_resamples": 10000,
+  "bootstrap_seed": 20261024,
+  "pairwise_tests": 180,
+  "p_value_adjustment": "Holm across all 180 planned token-budget pairwise tests"
+}

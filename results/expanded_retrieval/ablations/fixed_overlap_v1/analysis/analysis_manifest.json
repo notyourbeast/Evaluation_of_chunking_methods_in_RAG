@@ -1,0 +1,10 @@
+{
+  "protocol": "data/manifests/fixed_overlap_ablation_protocol_v1.md",
+  "base_configuration": "config/expanded_retrieval_v1.json",
+  "ablation_configuration": "config/fixed_overlap_ablation_v1.json",
+  "bootstrap_resamples": 10000,
+  "bootstrap_seed": 20261024,
+  "comparisons": 60,
+  "p_value_adjustment": "Holm across all 60 planned ablation comparisons",
+  "interpretation": "no-overlap minus 32-token-overlap; within-dataset paired comparisons only"
+}

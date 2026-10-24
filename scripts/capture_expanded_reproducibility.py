@@ -40,6 +40,9 @@ def tracked_paths() -> list[Path]:
         PROJECT_ROOT / "data" / "manifests" / "expanded_study_protocol_v1.md",
         PROJECT_ROOT / "data" / "manifests" / "expanded_statistical_analysis_protocol_v1.md",
         PROJECT_ROOT / "data" / "manifests" / "expanded_efficiency_benchmark_protocol_v1.md",
+        PROJECT_ROOT / "config" / "fixed_overlap_ablation_v1.json",
+        PROJECT_ROOT / "data" / "manifests" / "fixed_overlap_ablation_protocol_v1.md",
+        PROJECT_ROOT / "data" / "manifests" / "retrieved_token_budget_protocol_v1.md",
         PROJECT_ROOT / "data" / "manifests" / "expanded_input_inventory_v1.csv",
         PROJECT_ROOT / "data" / "manifests" / "expanded_input_checksums_v1.csv",
         AUDIT_ROOT / "expanded_input_and_relevance_audit_v1.json",
@@ -54,6 +57,11 @@ def tracked_paths() -> list[Path]:
         RESULTS_ROOT / "chunk_metadata" / "chunk_length_distributions.csv",
         RESULTS_ROOT / "chunk_metadata" / "representative_segments.csv",
         RESULTS_ROOT / "chunk_metadata" / "metadata_export_manifest.json",
+        RESULTS_ROOT / "ablations" / "fixed_overlap_v1" / "analysis" / "analysis_manifest.json",
+        RESULTS_ROOT / "ablations" / "fixed_overlap_v1" / "analysis" / "overlap_ablation_comparisons.csv",
+        RESULTS_ROOT / "token_budget_v1" / "analysis" / "analysis_manifest.json",
+        RESULTS_ROOT / "token_budget_v1" / "analysis" / "descriptive_metrics.csv",
+        RESULTS_ROOT / "token_budget_v1" / "analysis" / "pairwise_comparisons.csv",
         PROJECT_ROOT / "scripts" / "run_beir_retrieval.py",
         PROJECT_ROOT / "scripts" / "analyze_expanded_retrieval.py",
         PROJECT_ROOT / "scripts" / "benchmark_expanded_efficiency.py",
@@ -61,6 +69,9 @@ def tracked_paths() -> list[Path]:
         PROJECT_ROOT / "scripts" / "export_expanded_chunk_metadata.py",
         PROJECT_ROOT / "scripts" / "audit_expanded_inputs.py",
         PROJECT_ROOT / "scripts" / "capture_expanded_reproducibility.py",
+        PROJECT_ROOT / "scripts" / "analyze_fixed_overlap_ablation.py",
+        PROJECT_ROOT / "scripts" / "run_token_budget_retrieval.py",
+        PROJECT_ROOT / "scripts" / "analyze_token_budget_retrieval.py",
     ]
     for dataset in ("scifact", "nfcorpus", "arguana"):
         for strategy in ("fixed", "sentence", "semantic", "topic"):
@@ -72,7 +83,16 @@ def tracked_paths() -> list[Path]:
         paths.extend([
             RESULTS_ROOT / "topic_assignment_cache" / f"{dataset}_{config_prefix}.csv",
             RESULTS_ROOT / "topic_assignment_cache" / f"{dataset}_{config_prefix}.manifest.json",
+            RESULTS_ROOT / "ablations" / "fixed_overlap_v1" / "full" / dataset / "fixed_no_overlap" / "per_query_metrics.csv",
+            RESULTS_ROOT / "ablations" / "fixed_overlap_v1" / "full" / dataset / "fixed_no_overlap" / "summary.csv",
+            RESULTS_ROOT / "ablations" / "fixed_overlap_v1" / "full" / dataset / "fixed_no_overlap" / "run_manifest.json",
         ])
+        for strategy in ("fixed", "sentence", "semantic", "topic"):
+            paths.extend([
+                RESULTS_ROOT / "token_budget_v1" / "full" / dataset / strategy / "per_query_token_budget_metrics.csv",
+                RESULTS_ROOT / "token_budget_v1" / "full" / dataset / strategy / "summary.csv",
+                RESULTS_ROOT / "token_budget_v1" / "full" / dataset / strategy / "run_manifest.json",
+            ])
     return paths
 
 
