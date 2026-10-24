@@ -2,7 +2,7 @@
   "protocol_version": "expanded_retrieval_v1",
   "run_kind": "full",
   "warning": null,
-  "created_at_utc": "2026-10-22T11:56:28.265116+00:00",
+  "created_at_utc": "2026-10-24T19:14:14.677311+00:00",
   "dataset": "arguana",
   "strategy": "topic",
   "source_dataset_manifest_sha256": "3f37a2b84a20ddf573b4c9d0559378f7e25833ab3e983aaab04427664ed10d81",
@@ -13,12 +13,12 @@
   "counts": {
     "documents": 8674,
     "queries": 1401,
-    "chunks": 17222,
+    "chunks": 17259,
     "per_query_metric_rows": 5604,
     "chunk_token_count": {
       "minimum": 1,
       "maximum": 256,
-      "mean": 104.1317500870979
+      "mean": 103.90851150124573
     }
   },
   "environment": {
@@ -42,5 +42,11 @@
     }
   },
   "embedding_max_seq_length": 258,
-  "elapsed_seconds": 488.8917340830085
+  "topic_assignment_provenance": {
+    "source": "fitted_and_persisted",
+    "cache_path": "results/expanded_retrieval/topic_assignment_cache/arguana_543bd72568dde9dc.csv",
+    "sentence_records": 69138,
+    "sentence_sequence_sha256": "840b96e153243b1a20fc9b8e4b272172fe9992c20328f652975ca66e670b02c4"
+  },
+  "elapsed_seconds": 448.66974545799894
 }

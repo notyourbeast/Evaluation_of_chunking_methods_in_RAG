@@ -52,6 +52,7 @@ from transformers import AutoTokenizer
 CONFIG_PATH = PROJECT_ROOT / "config" / "expanded_retrieval_v1.json"
 DATA_ROOT = PROJECT_ROOT / "data" / "expanded"
 RESULTS_ROOT = PROJECT_ROOT / "results" / "expanded_retrieval"
+TOPIC_ASSIGNMENT_CACHE_ROOT = RESULTS_ROOT / "topic_assignment_cache"
 DATASETS = ("scifact", "nfcorpus", "arguana")
 STRATEGIES = ("fixed", "sentence", "semantic", "topic")
 
@@ -62,6 +63,10 @@ def sha256(path: Path) -> str:
         for block in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(block)
     return digest.hexdigest()
+
+
+def text_sha256(text: str) -> str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
 def read_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -199,13 +204,22 @@ def enforce_token_budget(tokenizer: Any, text: str, budget: int) -> str:
     return text
 
 
-def make_chunk(document_id: str, strategy: str, number: int, text: str, tokenizer: Any, budget: int) -> dict[str, Any]:
+def make_chunk(
+    document_id: str,
+    strategy: str,
+    number: int,
+    text: str,
+    tokenizer: Any,
+    budget: int,
+    boundary_metadata: dict[str, Any],
+) -> dict[str, Any]:
     text = enforce_token_budget(tokenizer, text, budget)
     return {
         "chunk_id": f"{document_id}::{strategy}::{number:05d}",
         "document_id": document_id,
         "text": text,
         "token_count": token_count(tokenizer, text),
+        "boundary_metadata": boundary_metadata,
     }
 
 
@@ -217,7 +231,23 @@ def fixed_chunks(documents: list[dict[str, Any]], tokenizer: Any, settings: dict
         for number, start in enumerate(range(0, len(tokens), size - overlap)):
             decoded = tokenizer.decode(tokens[start : start + size], skip_special_tokens=True).strip()
             if decoded:
-                chunks.append(make_chunk(document["document_id"], "fixed", number, decoded, tokenizer, size))
+                chunks.append(
+                    make_chunk(
+                        document["document_id"],
+                        "fixed",
+                        number,
+                        decoded,
+                        tokenizer,
+                        size,
+                        {
+                            "source_unit": "embedding_token",
+                            "source_token_start": start,
+                            "source_token_end_exclusive": min(start + size, len(tokens)),
+                            "overlap_tokens": overlap,
+                            "boundary_after": ["fixed_window"] if start + size < len(tokens) else ["document_end"],
+                        },
+                    )
+                )
     return chunks
 
 
@@ -236,25 +266,67 @@ def grouped_sentence_chunks(
         current: list[str] = []
         current_tokens = 0
         number = 0
+        current_start = 0
         sentences = sentence_map[document["document_id"]]
         embeddings = sentence_embeddings.get(document["document_id"]) if sentence_embeddings else None
         for index, sentence in enumerate(sentences):
             sentence_tokens = token_count(tokenizer, sentence)
             boundary = False
+            similarity = None
             if embeddings is not None and index > 0:
-                boundary = float(np.dot(embeddings[index - 1], embeddings[index])) < threshold
-            split = current and (
-                current_tokens + sentence_tokens > target
-                or (boundary and current_tokens >= minimum)
-            )
+                similarity = float(np.dot(embeddings[index - 1], embeddings[index]))
+                boundary = similarity < threshold
+            exceeds_budget = current_tokens + sentence_tokens > target
+            split_at_boundary = boundary and current_tokens >= minimum
+            split = current and (exceeds_budget or split_at_boundary)
             if split:
-                chunks.append(make_chunk(document["document_id"], strategy, number, " ".join(current), tokenizer, target))
+                reasons = []
+                if exceeds_budget:
+                    reasons.append("max_token_budget")
+                if split_at_boundary:
+                    reasons.append("semantic_similarity_below_threshold")
+                chunks.append(
+                    make_chunk(
+                        document["document_id"],
+                        strategy,
+                        number,
+                        " ".join(current),
+                        tokenizer,
+                        target,
+                        {
+                            "source_unit": "sentence_segment",
+                            "source_sentence_start": current_start,
+                            "source_sentence_end_inclusive": index - 1,
+                            "boundary_after": reasons,
+                            "adjacent_similarity_to_next": similarity if boundary else None,
+                            "semantic_similarity_threshold": threshold,
+                        },
+                    )
+                )
                 number += 1
                 current, current_tokens = [], 0
+                current_start = index
             current.append(sentence)
             current_tokens += sentence_tokens
         if current:
-            chunks.append(make_chunk(document["document_id"], strategy, number, " ".join(current), tokenizer, target))
+            chunks.append(
+                make_chunk(
+                    document["document_id"],
+                    strategy,
+                    number,
+                    " ".join(current),
+                    tokenizer,
+                    target,
+                    {
+                        "source_unit": "sentence_segment",
+                        "source_sentence_start": current_start,
+                        "source_sentence_end_inclusive": len(sentences) - 1,
+                        "boundary_after": ["document_end"],
+                        "adjacent_similarity_to_next": None,
+                        "semantic_similarity_threshold": threshold,
+                    },
+                )
+            )
     return chunks
 
 
@@ -273,8 +345,58 @@ def semantic_chunks(
     return grouped_sentence_chunks(documents, tokenizer, sentence_map, "semantic", settings, embeddings)
 
 
+def topic_sentence_sequence_sha256(sentence_records: list[tuple[str, str]]) -> str:
+    digest = hashlib.sha256()
+    for index, (document_id, sentence) in enumerate(sentence_records):
+        digest.update(f"{index}\0{document_id}\0{text_sha256(sentence)}\n".encode("utf-8"))
+    return digest.hexdigest()
+
+
+def load_cached_topic_labels(cache_path: Path, sentence_records: list[tuple[str, str]]) -> list[int]:
+    with cache_path.open(encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    if len(rows) != len(sentence_records):
+        raise ValueError(f"Topic assignment cache row count mismatch in {cache_path}")
+    labels: list[int] = []
+    for index, (row, (document_id, sentence)) in enumerate(zip(rows, sentence_records)):
+        expected = {
+            "sequence_index": str(index),
+            "document_id": document_id,
+            "sentence_sha256": text_sha256(sentence),
+        }
+        if any(row.get(field) != value for field, value in expected.items()):
+            raise ValueError(f"Topic assignment cache does not match the current sentence sequence: {cache_path}")
+        labels.append(int(row["topic_label"]))
+    return labels
+
+
+def write_topic_assignment_cache(cache_path: Path, sentence_records: list[tuple[str, str]], topics: list[int], seed: int) -> None:
+    if len(sentence_records) != len(topics):
+        raise ValueError("Cannot write topic cache with unequal sentence and label counts")
+    cache_path.parent.mkdir(parents=True, exist_ok=True)
+    temporary_path = cache_path.with_suffix(cache_path.suffix + ".tmp")
+    with temporary_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=["sequence_index", "document_id", "sentence_sha256", "topic_label"], lineterminator="\n")
+        writer.writeheader()
+        for index, ((document_id, sentence), topic) in enumerate(zip(sentence_records, topics)):
+            writer.writerow({"sequence_index": index, "document_id": document_id, "sentence_sha256": text_sha256(sentence), "topic_label": int(topic)})
+    temporary_path.replace(cache_path)
+    manifest = {
+        "schema_version": 1,
+        "config_path": str(CONFIG_PATH.relative_to(PROJECT_ROOT)),
+        "config_sha256": sha256(CONFIG_PATH),
+        "seed": seed,
+        "sentence_records": len(sentence_records),
+        "sentence_sequence_sha256": topic_sentence_sequence_sha256(sentence_records),
+        "assignment_file_sha256": sha256(cache_path),
+        "text_policy": "Sentence text is not stored; sentence SHA-256 values validate alignment to the versioned corpus.",
+    }
+    cache_path.with_suffix(".manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+
 def topic_chunks(
-    documents: list[dict[str, Any]], tokenizer: Any, nlp: Any, model: SentenceTransformer, settings: dict[str, Any], seed: int
+    documents: list[dict[str, Any]], tokenizer: Any, nlp: Any, model: SentenceTransformer, settings: dict[str, Any], seed: int,
+    assignment_cache_path: Path | None = None, assignment_provenance: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     # Deferred imports keep fixed/sentence/semantic runs independent of BERTopic.
     from bertopic import BERTopic
@@ -285,37 +407,102 @@ def topic_chunks(
     sentence_records = [(document["document_id"], sentence) for document in documents for sentence in sentence_map[document["document_id"]]]
     if not sentence_records:
         return []
-    texts = [sentence for _, sentence in sentence_records]
-    embeddings = model.encode(texts, batch_size=64, convert_to_numpy=True, normalize_embeddings=True, show_progress_bar=False)
-    umap_model = UMAP(random_state=seed, **settings["umap"])
-    hdbscan_model = HDBSCAN(**settings["hdbscan"])
-    topics, _ = BERTopic(umap_model=umap_model, hdbscan_model=hdbscan_model, embedding_model=None, verbose=False).fit_transform(texts, embeddings)
+    if assignment_cache_path is not None and assignment_cache_path.exists():
+        topics = load_cached_topic_labels(assignment_cache_path, sentence_records)
+        source = "validated_cached_assignments"
+    else:
+        texts = [sentence for _, sentence in sentence_records]
+        embeddings = model.encode(texts, batch_size=64, convert_to_numpy=True, normalize_embeddings=True, show_progress_bar=False)
+        umap_model = UMAP(random_state=seed, **settings["umap"])
+        hdbscan_model = HDBSCAN(**settings["hdbscan"])
+        fitted_topics, _ = BERTopic(umap_model=umap_model, hdbscan_model=hdbscan_model, embedding_model=None, verbose=False).fit_transform(texts, embeddings)
+        topics = [int(topic) for topic in fitted_topics]
+        source = "fitted_this_run"
+        if assignment_cache_path is not None:
+            write_topic_assignment_cache(assignment_cache_path, sentence_records, topics, seed)
+            source = "fitted_and_persisted"
+    if assignment_provenance is not None:
+        assignment_provenance.update({
+            "source": source,
+            "cache_path": str(assignment_cache_path.relative_to(PROJECT_ROOT)) if assignment_cache_path is not None else None,
+            "sentence_records": len(sentence_records),
+            "sentence_sequence_sha256": topic_sentence_sequence_sha256(sentence_records),
+        })
     by_document: dict[str, list[tuple[str, int]]] = defaultdict(list)
     for (document_id, sentence), topic in zip(sentence_records, topics):
         by_document[document_id].append((sentence, int(topic)))
     chunks = []
     for document in documents:
         current: list[str] = []
-        current_tokens, number, current_topic = 0, 0, None
-        for sentence, topic in by_document[document["document_id"]]:
+        current_topics: list[int] = []
+        current_tokens, number, current_topic, current_start = 0, 0, None, 0
+        sentence_topics = by_document[document["document_id"]]
+        for index, (sentence, topic) in enumerate(sentence_topics):
             sentence_tokens = token_count(tokenizer, sentence)
-            split = current and (
-                current_tokens + sentence_tokens > settings["target_tokens"]
-                or (current_tokens >= settings["minimum_chunk_tokens"] and topic != current_topic)
-            )
+            exceeds_budget = current_tokens + sentence_tokens > settings["target_tokens"]
+            topic_change = current_tokens >= settings["minimum_chunk_tokens"] and topic != current_topic
+            split = current and (exceeds_budget or topic_change)
             if split:
-                chunks.append(make_chunk(document["document_id"], "topic", number, " ".join(current), tokenizer, settings["target_tokens"]))
+                reasons = []
+                if exceeds_budget:
+                    reasons.append("max_token_budget")
+                if topic_change:
+                    reasons.append("topic_label_change")
+                chunks.append(
+                    make_chunk(
+                        document["document_id"],
+                        "topic",
+                        number,
+                        " ".join(current),
+                        tokenizer,
+                        settings["target_tokens"],
+                        {
+                            "source_unit": "sentence_segment",
+                            "source_sentence_start": current_start,
+                            "source_sentence_end_inclusive": index - 1,
+                            "boundary_after": reasons,
+                            "topic_label_first": current_topics[0],
+                            "topic_label_last": current_topics[-1],
+                            "contains_outlier_topic": -1 in current_topics,
+                            "next_topic_label": topic if topic_change else None,
+                        },
+                    )
+                )
                 number += 1
-                current, current_tokens = [], 0
+                current, current_topics, current_tokens = [], [], 0
+                current_start = index
             current.append(sentence)
+            current_topics.append(topic)
             current_tokens += sentence_tokens
             current_topic = topic
         if current:
-            chunks.append(make_chunk(document["document_id"], "topic", number, " ".join(current), tokenizer, settings["target_tokens"]))
+            chunks.append(
+                make_chunk(
+                    document["document_id"],
+                    "topic",
+                    number,
+                    " ".join(current),
+                    tokenizer,
+                    settings["target_tokens"],
+                    {
+                        "source_unit": "sentence_segment",
+                        "source_sentence_start": current_start,
+                        "source_sentence_end_inclusive": len(sentence_topics) - 1,
+                        "boundary_after": ["document_end"],
+                        "topic_label_first": current_topics[0],
+                        "topic_label_last": current_topics[-1],
+                        "contains_outlier_topic": -1 in current_topics,
+                        "next_topic_label": None,
+                    },
+                )
+            )
     return chunks
 
 
-def create_chunks(strategy: str, documents: list[dict[str, Any]], tokenizer: Any, nlp: Any, model: SentenceTransformer, config: dict[str, Any]) -> list[dict[str, Any]]:
+def create_chunks(
+    strategy: str, documents: list[dict[str, Any]], tokenizer: Any, nlp: Any, model: SentenceTransformer, config: dict[str, Any],
+    topic_assignment_cache_path: Path | None = None, topic_assignment_provenance: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
     settings = config["chunking"][strategy]
     if strategy == "fixed":
         return fixed_chunks(documents, tokenizer, settings)
@@ -324,7 +511,7 @@ def create_chunks(strategy: str, documents: list[dict[str, Any]], tokenizer: Any
         return grouped_sentence_chunks(documents, tokenizer, sentence_map, "sentence", settings)
     if strategy == "semantic":
         return semantic_chunks(documents, tokenizer, nlp, model, settings)
-    return topic_chunks(documents, tokenizer, nlp, model, settings, config["seed"])
+    return topic_chunks(documents, tokenizer, nlp, model, settings, config["seed"], topic_assignment_cache_path, topic_assignment_provenance)
 
 
 def ranking_metrics(ranked_ids: list[str], qrels: dict[str, int], cutoffs: list[int]) -> list[dict[str, float | int]]:
@@ -390,7 +577,7 @@ def write_outputs(output_dir: Path, rows: list[dict[str, Any]], run_manifest: di
     output_dir.mkdir(parents=True, exist_ok=True)
     fields = ["dataset", "strategy", "query_id", "k", "retrieved_document_ids", "hit_rate", "recall", "precision", "reciprocal_rank", "ndcg"]
     with (output_dir / "per_query_metrics.csv").open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields)
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     summaries = []
@@ -398,7 +585,7 @@ def write_outputs(output_dir: Path, rows: list[dict[str, Any]], run_manifest: di
         subset = [row for row in rows if row["k"] == cutoff]
         summaries.append({"k": cutoff, "query_count": len(subset), **{metric: float(np.mean([row[metric] for row in subset])) for metric in ("hit_rate", "recall", "precision", "reciprocal_rank", "ndcg")}})
     with (output_dir / "summary.csv").open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=["k", "query_count", "hit_rate", "recall", "precision", "reciprocal_rank", "ndcg"])
+        writer = csv.DictWriter(handle, fieldnames=["k", "query_count", "hit_rate", "recall", "precision", "reciprocal_rank", "ndcg"], lineterminator="\n")
         writer.writeheader()
         writer.writerows(summaries)
     (output_dir / "run_manifest.json").write_text(json.dumps(run_manifest, indent=2) + "\n", encoding="utf-8")
@@ -412,7 +599,10 @@ def package_versions() -> dict[str, str]:
     return {"faiss": faiss.__version__, "numpy": np.__version__, "spacy": spacy.__version__, "sentence_transformers": sentence_transformers.__version__, "transformers": transformers.__version__}
 
 
-def run(dataset: str, strategy: str, config: dict[str, Any], max_documents: int | None, max_queries: int | None, output_root: Path, overwrite: bool) -> Path:
+def run(
+    dataset: str, strategy: str, config: dict[str, Any], max_documents: int | None, max_queries: int | None, output_root: Path,
+    overwrite: bool, refresh_topic_assignments: bool = False,
+) -> Path:
     documents, queries, qrels, source_manifest = load_dataset(dataset)
     documents, queries, qrels = deterministic_smoke_subset(documents, queries, qrels, max_documents, max_queries)
     smoke = max_documents is not None or max_queries is not None
@@ -436,7 +626,19 @@ def run(dataset: str, strategy: str, config: dict[str, Any], max_documents: int 
     )
     model.max_seq_length = embedding_sequence_limit
     started = time.monotonic()
-    chunks = create_chunks(strategy, documents, tokenizer, nlp, model, config)
+    topic_assignment_provenance: dict[str, Any] = {}
+    topic_assignment_cache_path = None
+    if strategy == "topic" and not smoke:
+        cache_key = f"{dataset}_{sha256(CONFIG_PATH)[:16]}.csv"
+        topic_assignment_cache_path = TOPIC_ASSIGNMENT_CACHE_ROOT / cache_key
+        if refresh_topic_assignments and topic_assignment_cache_path.exists():
+            topic_assignment_cache_path.unlink()
+            topic_assignment_cache_path.with_suffix(".manifest.json").unlink(missing_ok=True)
+    chunks = create_chunks(
+        strategy, documents, tokenizer, nlp, model, config,
+        topic_assignment_cache_path=topic_assignment_cache_path,
+        topic_assignment_provenance=topic_assignment_provenance,
+    )
     rows = retrieve_and_score(dataset, chunks, queries, qrels, model, config)
     manifest = {
         "protocol_version": config["protocol_version"],
@@ -473,6 +675,7 @@ def run(dataset: str, strategy: str, config: dict[str, Any], max_documents: int 
             },
         },
         "embedding_max_seq_length": embedding_sequence_limit,
+        "topic_assignment_provenance": topic_assignment_provenance if strategy == "topic" else None,
         "elapsed_seconds": time.monotonic() - started,
     }
     write_outputs(output_dir, rows, manifest)
@@ -487,6 +690,7 @@ def main() -> None:
     parser.add_argument("--max-queries", type=int, help="Smoke-run query limit; never use its outputs as study results.")
     parser.add_argument("--output-root", type=Path, default=RESULTS_ROOT)
     parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument("--refresh-topic-assignments", action="store_true", help="Replace a persisted full-corpus topic assignment cache before a topic run.")
     parser.add_argument("--dry-run", action="store_true", help="Validate inputs and print planned full runs without loading models.")
     args = parser.parse_args()
     if (args.max_documents is not None and args.max_documents <= 0) or (args.max_queries is not None and args.max_queries <= 0):
@@ -500,7 +704,10 @@ def main() -> None:
             if args.dry_run:
                 print(f"Planned full run: dataset={dataset}, strategy={strategy}, documents={len(documents)}, queries={len(queries)}")
             else:
-                output = run(dataset, strategy, config, args.max_documents, args.max_queries, args.output_root, args.overwrite)
+                output = run(
+                    dataset, strategy, config, args.max_documents, args.max_queries, args.output_root, args.overwrite,
+                    refresh_topic_assignments=args.refresh_topic_assignments,
+                )
                 print(f"Completed {dataset}/{strategy}: {output}")
 
 

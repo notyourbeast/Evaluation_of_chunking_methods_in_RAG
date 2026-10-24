@@ -32,3 +32,13 @@ data/expanded/*/documents.jsonl
 data/expanded/*/queries.jsonl
 data/expanded/*/eligible_test_queries.jsonl
 data/expanded/*/qrels_test.tsv
+
+# Regenerable expanded-study intermediates. Compact trial tables, manifests,
+# summaries, and frozen topic assignments remain versioned.
+results/expanded_retrieval/efficiency/
+results/expanded_retrieval/efficiency_v2/*/*/benchmark.index
+results/expanded_retrieval/efficiency_v2/*/*/chunk_document_ids.json
+results/expanded_retrieval/efficiency_v2/*/*/chunk_metadata.csv
+results/expanded_retrieval/efficiency_v2/*/*/fresh_query_*.json
+results/expanded_retrieval/efficiency_v2/*/*/latency_query_sample.json
+results/expanded_retrieval/chunk_metadata/*/*/chunk_metadata.csv

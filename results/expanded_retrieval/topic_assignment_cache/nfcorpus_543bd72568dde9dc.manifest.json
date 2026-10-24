@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "config_path": "config/expanded_retrieval_v1.json",
+  "config_sha256": "543bd72568dde9dc9dcbe55f50a0ab19954a51ee454babafde0c43aba34ff187",
+  "seed": 20261021,
+  "sentence_records": 42250,
+  "sentence_sequence_sha256": "1a7a1a67fead79e4da5825616ec61961a52ce48643b4303ae88203ae796f6c3c",
+  "assignment_file_sha256": "dfa242d8a7ffabf45e147ec541e9751ef9d2c3c76c32beec8ea6ebf67843a9b1",
+  "text_policy": "Sentence text is not stored; sentence SHA-256 values validate alignment to the versioned corpus."
+}

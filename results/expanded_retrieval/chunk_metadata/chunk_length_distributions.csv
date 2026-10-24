@@ -1,0 +1,13 @@
+dataset,strategy,chunk_count,minimum_tokens,p10_tokens,p25_tokens,median_tokens,p75_tokens,p90_tokens,maximum_tokens,topic_outlier_chunks,boundary_after_counts_json
+scifact,fixed,10400,1,41.0,109.0,225.0,256.0,256.0,256,0,"{""document_end"": 6019, ""fixed_window"": 4381}"
+scifact,sentence,9550,9,59.90000000000009,133.0,213.0,239.0,250.0,256,0,"{""document_end"": 5183, ""max_token_budget"": 4367}"
+scifact,semantic,15864,1,52.0,101.0,113.0,128.0,148.0,256,0,"{""document_end"": 5183, ""max_token_budget"": 127, ""semantic_similarity_below_threshold"": 10648}"
+scifact,topic,13147,1,53.0,103.0,124.0,166.0,221.0,256,7796,"{""document_end"": 5183, ""max_token_budget"": 1406, ""topic_label_change"": 6897}"
+nfcorpus,fixed,7512,1,51.0,124.0,232.0,256.0,256.0,256,0,"{""document_end"": 4133, ""fixed_window"": 3379}"
+nfcorpus,sentence,7034,4,69.0,140.0,211.0,238.0,249.69999999999982,256,0,"{""document_end"": 3633, ""max_token_budget"": 3401}"
+nfcorpus,semantic,11888,3,48.0,100.0,112.0,128.0,149.0,255,0,"{""document_end"": 3633, ""max_token_budget"": 131, ""semantic_similarity_below_threshold"": 8225}"
+nfcorpus,topic,10484,2,47.0,101.0,119.0,151.0,201.0,256,6056,"{""document_end"": 3633, ""max_token_budget"": 698, ""topic_label_change"": 6392}"
+arguana,fixed,12074,1,42.0,94.0,158.0,236.0,256.0,256,0,"{""document_end"": 9601, ""fixed_window"": 2473}"
+arguana,sentence,11124,2,63.0,106.0,167.0,227.0,246.0,256,0,"{""document_end"": 8674, ""max_token_budget"": 2450}"
+arguana,semantic,18910,1,34.0,75.0,105.0,117.0,130.0,228,0,"{""document_end"": 8674, ""max_token_budget"": 3, ""semantic_similarity_below_threshold"": 10236}"
+arguana,topic,17259,1,33.0,75.0,108.0,128.0,158.0,256,12386,"{""document_end"": 8674, ""max_token_budget"": 247, ""topic_label_change"": 8419}"

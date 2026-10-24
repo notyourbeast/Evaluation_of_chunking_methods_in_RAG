@@ -18,6 +18,8 @@ Strategies are compared within each collection using query-level paired Wilcoxon
 
 The corpus and query-selection protocol is documented in `data/manifests/expanded_study_protocol_v1.md`. The inferential procedure is documented in `data/manifests/expanded_statistical_analysis_protocol_v1.md`.
 
+The efficiency protocol, frozen topic-assignment approach, input/relevance audit, package versions, and final artefact checksums are included under `data/manifests/` and `results/expanded_retrieval/audits/`. Topic-model fitting was not fully deterministic for every collection; the reported topic runs therefore reuse sentence-hash-validated, persisted assignment files rather than claiming deterministic refitting.
+
 After the expanded retrieval runs are available, generate analysis tables with:
 
 ```bash
@@ -38,5 +40,8 @@ MPLCONFIGDIR="$PWD/.cache/matplotlib" conda run -n rag_chunking \
 - Descriptive and inferential outputs: `results/expanded_retrieval/analysis/`
 - Reader-facing retrieval tables: `results/expanded_retrieval/analysis/thesis_tables/retrieval_results_tables.md`
 - Publication figures: `results/expanded_retrieval/analysis/figures/`
+- Efficiency trial summaries: `results/expanded_retrieval/efficiency_v2/analysis/`
+- Segmentation length/boundary summaries and deterministic excerpts: `results/expanded_retrieval/chunk_metadata/`
+- Input, environment, and artefact-checksum audits: `results/expanded_retrieval/audits/`
 
 The RAGAS scripts and outputs are retained as exploratory material. They are not part of the main retrieval conclusions because the available runs contain parsing failures and partial-result handling.

@@ -1,0 +1,41 @@
+{
+  "metadata_schema_version": 1,
+  "config_path": "config/expanded_retrieval_v1.json",
+  "config_sha256": "543bd72568dde9dc9dcbe55f50a0ab19954a51ee454babafde0c43aba34ff187",
+  "seed": 20261021,
+  "datasets": [
+    "scifact",
+    "nfcorpus",
+    "arguana"
+  ],
+  "strategies": [
+    "fixed",
+    "sentence",
+    "semantic",
+    "topic"
+  ],
+  "source_archives": {
+    "scifact": "536e14446a0ba56ed1398ab1055f39fe852686ecad24a6306c80c490fa8e0165",
+    "nfcorpus": "efe5be03f8c5b86a5870102d0599d227c8c6e2484328e68c6522560385671b0b",
+    "arguana": "cfdf79adce27a401b3cd3ea267903134dbfab2c6afeb95d7fe5724a00bf7557b"
+  },
+  "topic_assignment_caches": {
+    "scifact": {
+      "path": "results/expanded_retrieval/topic_assignment_cache/scifact_543bd72568dde9dc.csv",
+      "sha256": "f2ff133e1cc6d6dc03bd354174a642017f0936738053abe5878496ca8b93ad80",
+      "manifest_path": "results/expanded_retrieval/topic_assignment_cache/scifact_543bd72568dde9dc.manifest.json"
+    },
+    "nfcorpus": {
+      "path": "results/expanded_retrieval/topic_assignment_cache/nfcorpus_543bd72568dde9dc.csv",
+      "sha256": "dfa242d8a7ffabf45e147ec541e9751ef9d2c3c76c32beec8ea6ebf67843a9b1",
+      "manifest_path": "results/expanded_retrieval/topic_assignment_cache/nfcorpus_543bd72568dde9dc.manifest.json"
+    },
+    "arguana": {
+      "path": "results/expanded_retrieval/topic_assignment_cache/arguana_543bd72568dde9dc.csv",
+      "sha256": "58da9878d1262eea7cf53aed25b9ad398ffe1933d59b75691a3a78e5894cd130",
+      "manifest_path": "results/expanded_retrieval/topic_assignment_cache/arguana_543bd72568dde9dc.manifest.json"
+    }
+  },
+  "text_policy": "Full chunk text is represented by SHA-256. Excerpts appear only in representative_segments.csv.",
+  "example_selection": "First qualifying chunks in deterministic corpus order; no retrieval outcome is used."
+}

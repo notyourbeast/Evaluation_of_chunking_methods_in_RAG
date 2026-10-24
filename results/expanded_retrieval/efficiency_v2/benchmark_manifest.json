@@ -1,0 +1,23 @@
+{
+  "protocol": "data/manifests/expanded_efficiency_benchmark_protocol_v1.md",
+  "benchmark_seed": 20261023,
+  "config_sha256": "543bd72568dde9dc9dcbe55f50a0ab19954a51ee454babafde0c43aba34ff187",
+  "preparation_repetitions": 3,
+  "warm_repetitions": 3,
+  "fresh_repetitions": 3,
+  "query_sample_size": 100,
+  "completed_configurations": [
+    "arguana/sentence",
+    "scifact/sentence",
+    "scifact/topic",
+    "nfcorpus/sentence",
+    "scifact/semantic",
+    "nfcorpus/fixed",
+    "nfcorpus/topic",
+    "arguana/semantic",
+    "scifact/fixed",
+    "arguana/topic",
+    "nfcorpus/semantic",
+    "arguana/fixed"
+  ]
+}

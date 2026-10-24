@@ -2,7 +2,7 @@
   "protocol_version": "expanded_retrieval_v1",
   "run_kind": "full",
   "warning": null,
-  "created_at_utc": "2026-10-22T11:34:14.532142+00:00",
+  "created_at_utc": "2026-10-24T19:01:34.416598+00:00",
   "dataset": "scifact",
   "strategy": "topic",
   "source_dataset_manifest_sha256": "5b0a8b52713e171eb3d9f418e48e5409129cb92d39c38930791f2b62a92971e4",
@@ -42,5 +42,11 @@
     }
   },
   "embedding_max_seq_length": 258,
-  "elapsed_seconds": 368.75086779199773
+  "topic_assignment_provenance": {
+    "source": "fitted_and_persisted",
+    "cache_path": "results/expanded_retrieval/topic_assignment_cache/scifact_543bd72568dde9dc.csv",
+    "sentence_records": 49483,
+    "sentence_sequence_sha256": "076f995ade7fcceebf7e472aaae1351eefdb85c149dec7ec1ee567d70d61f4b9"
+  },
+  "elapsed_seconds": 353.0866482089914
 }

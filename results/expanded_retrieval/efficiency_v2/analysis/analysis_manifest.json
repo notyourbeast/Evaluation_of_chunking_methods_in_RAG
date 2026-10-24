@@ -1,0 +1,28 @@
+{
+  "input_manifest": "results/expanded_retrieval/efficiency_v2/benchmark_manifest.json",
+  "completed_configurations": [
+    "arguana/sentence",
+    "scifact/sentence",
+    "scifact/topic",
+    "nfcorpus/sentence",
+    "scifact/semantic",
+    "nfcorpus/fixed",
+    "nfcorpus/topic",
+    "arguana/semantic",
+    "scifact/fixed",
+    "arguana/topic",
+    "nfcorpus/semantic",
+    "arguana/fixed"
+  ],
+  "preparation_rows": 36,
+  "warm_latency_rows": 3600,
+  "fresh_process_rows": 36,
+  "statistics": "median, 10th percentile, 90th percentile, and mean; descriptive only",
+  "outputs": [
+    "preparation_summary.csv",
+    "warm_latency_summary.csv",
+    "fresh_process_summary.csv",
+    "efficiency_summary.csv",
+    "efficiency_results_table.md"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "audit_version": "expanded_input_and_relevance_audit_v1",
+  "dataset_audits": [
+    {
+      "dataset": "scifact",
+      "archive_url": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/scifact.zip",
+      "archive_sha256": "536e14446a0ba56ed1398ab1055f39fe852686ecad24a6306c80c490fa8e0165",
+      "documents": 5183,
+      "official_queries_loaded": 1109,
+      "eligible_test_queries": 300,
+      "positive_qrels": 339,
+      "positive_qrels_with_missing_corpus_document": 0,
+      "selection_rule": "official test queries with at least one positive qrel whose document is present in the supplied corpus",
+      "relevance_rule": "official BEIR document-level qrels; no answer-string matching",
+      "per_query_rows_checked": 4800
+    },
+    {
+      "dataset": "nfcorpus",
+      "archive_url": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/nfcorpus.zip",
+      "archive_sha256": "efe5be03f8c5b86a5870102d0599d227c8c6e2484328e68c6522560385671b0b",
+      "documents": 3633,
+      "official_queries_loaded": 3237,
+      "eligible_test_queries": 323,
+      "positive_qrels": 12334,
+      "positive_qrels_with_missing_corpus_document": 0,
+      "selection_rule": "official test queries with at least one positive qrel whose document is present in the supplied corpus",
+      "relevance_rule": "official BEIR document-level qrels; no answer-string matching",
+      "per_query_rows_checked": 5168
+    },
+    {
+      "dataset": "arguana",
+      "archive_url": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/arguana.zip",
+      "archive_sha256": "cfdf79adce27a401b3cd3ea267903134dbfab2c6afeb95d7fe5724a00bf7557b",
+      "documents": 8674,
+      "official_queries_loaded": 1406,
+      "eligible_test_queries": 1401,
+      "positive_qrels": 1406,
+      "positive_qrels_with_missing_corpus_document": 5,
+      "selection_rule": "official test queries with at least one positive qrel whose document is present in the supplied corpus",
+      "relevance_rule": "official BEIR document-level qrels; no answer-string matching",
+      "per_query_rows_checked": 22416
+    }
+  ],
+  "assertions": {
+    "selection_is_not_first_n_or_retrieval_outcome_based": true,
+    "relevance_is_document_level_official_qrels_not_answer_string_matching": true,
+    "ranked_document_ids_are_unique": true
+  }
+}

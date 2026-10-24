@@ -2,7 +2,7 @@
   "protocol_version": "expanded_retrieval_v1",
   "run_kind": "full",
   "warning": null,
-  "created_at_utc": "2026-10-22T11:40:16.251945+00:00",
+  "created_at_utc": "2026-10-24T19:06:44.285930+00:00",
   "dataset": "nfcorpus",
   "strategy": "topic",
   "source_dataset_manifest_sha256": "997cae187f3745910b8f6e7339af17a27d7167b48f786f9cee001ade4f333d2e",
@@ -42,5 +42,11 @@
     }
   },
   "embedding_max_seq_length": 258,
-  "elapsed_seconds": 311.01989533301094
+  "topic_assignment_provenance": {
+    "source": "fitted_and_persisted",
+    "cache_path": "results/expanded_retrieval/topic_assignment_cache/nfcorpus_543bd72568dde9dc.csv",
+    "sentence_records": 42250,
+    "sentence_sequence_sha256": "1a7a1a67fead79e4da5825616ec61961a52ce48643b4303ae88203ae796f6c3c"
+  },
+  "elapsed_seconds": 309.0457455829892
 }
