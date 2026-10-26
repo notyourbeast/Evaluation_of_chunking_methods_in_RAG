@@ -1,0 +1,7 @@
+cff-version: 1.2.0
+message: "If you use this repository, please cite it as below."
+title: "Evaluation of Chunking Methods in RAG"
+authors:
+  - family-names: "Shiragave"
+    given-names: "Saiprasad Panditrao"
+url: "https://github.com/notyourbeast/Evaluation_of_chunking_methods_in_RAG"

@@ -52,3 +52,7 @@ MPLCONFIGDIR="$PWD/.cache/matplotlib" conda run -n rag_chunking \
 - Input, environment, and artefact-checksum audits: `results/expanded_retrieval/audits/`
 
 The RAGAS scripts and outputs are retained as exploratory material. They are not part of the main retrieval conclusions because the available runs contain parsing failures and partial-result handling.
+
+## Citation
+
+If this code or its accompanying artefacts are used, cite the repository using the metadata in [`CITATION.cff`](CITATION.cff). The manuscript's reference-list entry should identify this GitHub repository as an online source and include the access date.

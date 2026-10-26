@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="760" viewBox="0 0 1600 760" role="img" aria-labelledby="title desc">
+  <title id="title">Controlled document-retrieval workflow</title>
+  <desc id="desc">Three BEIR collections are normalised, split using four chunking configurations, embedded with a shared MiniLM model, indexed in separate FAISS indexes, ranked at document level, and evaluated with effectiveness, token-budget, and efficiency measures.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#374151"/>
+    </marker>
+    <style>
+      .title { font: 700 31px Arial, Helvetica, sans-serif; fill: #111827; }
+      .subtitle { font: 400 18px Arial, Helvetica, sans-serif; fill: #4b5563; }
+      .heading { font: 700 19px Arial, Helvetica, sans-serif; fill: #111827; }
+      .body { font: 400 16px Arial, Helvetica, sans-serif; fill: #1f2937; }
+      .small { font: 400 14px Arial, Helvetica, sans-serif; fill: #374151; }
+      .arrow { stroke: #374151; stroke-width: 3; fill: none; marker-end: url(#arrow); }
+      .dashed { stroke: #6b7280; stroke-width: 2.5; fill: none; stroke-dasharray: 8 7; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1600" height="760" fill="#ffffff"/>
+  <text x="800" y="52" text-anchor="middle" class="title">Controlled workflow for the expanded document-retrieval study</text>
+  <text x="800" y="82" text-anchor="middle" class="subtitle">All effectiveness comparisons are paired within collection; no generated-answer evaluation is included.</text>
+
+  <rect x="55" y="180" width="220" height="140" rx="16" fill="#dbeafe" stroke="#2563eb" stroke-width="3"/>
+  <text x="165" y="215" text-anchor="middle" class="heading">BEIR collections</text>
+  <text x="165" y="245" text-anchor="middle" class="body">SciFact</text>
+  <text x="165" y="270" text-anchor="middle" class="body">NFCorpus</text>
+  <text x="165" y="295" text-anchor="middle" class="body">ArguAna</text>
+
+  <rect x="345" y="180" width="230" height="140" rx="16" fill="#e0f2fe" stroke="#0284c7" stroke-width="3"/>
+  <text x="460" y="215" text-anchor="middle" class="heading">Normalise inputs</text>
+  <text x="460" y="245" text-anchor="middle" class="body">Complete corpus</text>
+  <text x="460" y="270" text-anchor="middle" class="body">Eligible test queries</text>
+  <text x="460" y="295" text-anchor="middle" class="body">Official BEIR qrels</text>
+
+  <path d="M275,250 L345,250" class="arrow"/>
+  <path d="M575,250 L635,250" class="arrow"/>
+
+  <rect x="635" y="125" width="310" height="250" rx="16" fill="#fef3c7" stroke="#d97706" stroke-width="3"/>
+  <text x="790" y="160" text-anchor="middle" class="heading">Chunking configuration</text>
+  <rect x="660" y="182" width="120" height="54" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="720" y="215" text-anchor="middle" class="body">Fixed-size</text>
+  <rect x="800" y="182" width="120" height="54" rx="10" fill="#ffedd5" stroke="#ea580c" stroke-width="2"/>
+  <text x="860" y="215" text-anchor="middle" class="body">Sentence</text>
+  <rect x="660" y="260" width="120" height="54" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="720" y="293" text-anchor="middle" class="body">Semantic</text>
+  <rect x="800" y="260" width="120" height="54" rx="10" fill="#f3e8ff" stroke="#9333ea" stroke-width="2"/>
+  <text x="860" y="293" text-anchor="middle" class="body">Topic-aware</text>
+  <text x="790" y="347" text-anchor="middle" class="small">256-token target; configuration-specific boundary rules</text>
+
+  <path d="M945,250 L1005,250" class="arrow"/>
+  <rect x="1005" y="180" width="245" height="140" rx="16" fill="#ede9fe" stroke="#7c3aed" stroke-width="3"/>
+  <text x="1128" y="215" text-anchor="middle" class="heading">Shared dense retrieval</text>
+  <text x="1128" y="245" text-anchor="middle" class="body">MiniLM embeddings</text>
+  <text x="1128" y="270" text-anchor="middle" class="body">L2 normalisation</text>
+  <text x="1128" y="295" text-anchor="middle" class="body">Separate FAISS IndexFlatIP indexes</text>
+
+  <path d="M1250,250 L1310,250" class="arrow"/>
+  <rect x="1310" y="180" width="235" height="140" rx="16" fill="#d1fae5" stroke="#059669" stroke-width="3"/>
+  <text x="1428" y="215" text-anchor="middle" class="heading">Document ranking</text>
+  <text x="1428" y="245" text-anchor="middle" class="body">Maximum chunk score</text>
+  <text x="1428" y="270" text-anchor="middle" class="body">Unique documents</text>
+  <text x="1428" y="295" text-anchor="middle" class="body">k = 1, 3, 5, 10</text>
+
+  <path d="M1428,320 L1428,425" class="arrow"/>
+  <rect x="1215" y="425" width="330" height="220" rx="16" fill="#ecfdf5" stroke="#059669" stroke-width="3"/>
+  <text x="1380" y="462" text-anchor="middle" class="heading">Paired evaluation within collection</text>
+  <text x="1380" y="497" text-anchor="middle" class="body">Hit Rate · Recall · Precision</text>
+  <text x="1380" y="525" text-anchor="middle" class="body">Reciprocal Rank · nDCG</text>
+  <text x="1380" y="555" text-anchor="middle" class="body">Bootstrap CIs · Holm-adjusted tests</text>
+  <text x="1380" y="584" text-anchor="middle" class="body">Wilcoxon and sign-flip sensitivity</text>
+  <text x="1380" y="620" text-anchor="middle" class="small">Results are not pooled across datasets</text>
+
+  <path d="M1128,320 L1128,425" class="dashed"/>
+  <rect x="790" y="425" width="335" height="220" rx="16" fill="#fefce8" stroke="#ca8a04" stroke-width="3"/>
+  <text x="958" y="462" text-anchor="middle" class="heading">Token-budget and efficiency analysis</text>
+  <text x="958" y="497" text-anchor="middle" class="body">Strict 512- and 1,024-token budgets</text>
+  <text x="958" y="525" text-anchor="middle" class="body">Chunking, embedding, and index time</text>
+  <text x="958" y="555" text-anchor="middle" class="body">Index size and chunk footprint</text>
+  <text x="958" y="584" text-anchor="middle" class="body">Warm and fresh-process query timing</text>
+  <text x="958" y="620" text-anchor="middle" class="small">Descriptive efficiency measurements</text>
+
+  <path d="M790,375 L790,425" class="dashed"/>
+  <rect x="55" y="450" width="635" height="135" rx="16" fill="#f9fafb" stroke="#6b7280" stroke-width="2" stroke-dasharray="7 6"/>
+  <text x="372" y="486" text-anchor="middle" class="heading">Scope boundary</text>
+  <text x="372" y="520" text-anchor="middle" class="body">The study measures document retrieval and retrieval resources.</text>
+  <text x="372" y="550" text-anchor="middle" class="body">Generated-answer correctness, faithfulness, and citation quality are not evaluated.</text>
+</svg>

@@ -11,11 +11,13 @@ import json
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 
 
 ROOT = Path(__file__).resolve().parents[1]
 ANALYSIS_DIR = ROOT / "results" / "expanded_retrieval" / "analysis"
+TOKEN_BUDGET_ANALYSIS_DIR = ROOT / "results" / "expanded_retrieval" / "token_budget_v1" / "analysis"
 FULL_RUNS_DIR = ROOT / "results" / "expanded_retrieval" / "full"
 OUTPUT_DIR = ANALYSIS_DIR / "figures"
 
@@ -99,6 +101,16 @@ def read_indexing_footprint() -> pd.DataFrame:
                 }
             )
     return pd.DataFrame.from_records(records)
+
+
+def read_token_budget_metrics() -> pd.DataFrame:
+    source = TOKEN_BUDGET_ANALYSIS_DIR / "descriptive_metrics.csv"
+    frame = pd.read_csv(source)
+    _require_columns(frame, {"dataset", "strategy", "token_budget", "measure", "mean"}, source)
+    expected_rows = len(DATASETS) * len(STRATEGIES) * 2 * 7
+    if len(frame) != expected_rows:
+        raise ValueError(f"Expected {expected_rows} token-budget descriptive rows, found {len(frame)}")
+    return frame
 
 
 def apply_style() -> None:
@@ -231,6 +243,41 @@ def create_significance_figure(significant: pd.DataFrame) -> Path:
     return save_figure(figure, "figure3_holm_significant_comparisons.png")
 
 
+def create_token_budget_figure(descriptive: pd.DataFrame) -> Path:
+    subset = descriptive.loc[descriptive["measure"] == "ndcg"].copy()
+    budgets = (512, 1024)
+    figure, axes = plt.subplots(1, 3, figsize=(11.5, 3.8), sharey=True)
+    x_positions = np.arange(len(budgets))
+    width = 0.18
+    offsets = np.linspace(-1.5 * width, 1.5 * width, len(STRATEGIES))
+
+    for axis, dataset in zip(axes, DATASETS, strict=True):
+        data = subset.loc[subset["dataset"] == dataset]
+        for strategy, offset in zip(STRATEGIES, offsets, strict=True):
+            values = [
+                float(data.loc[(data["strategy"] == strategy) & (data["token_budget"] == budget), "mean"].iloc[0])
+                for budget in budgets
+            ]
+            axis.bar(
+                x_positions + offset,
+                values,
+                width=width,
+                color=COLOURS[strategy],
+                label=STRATEGY_LABELS[strategy],
+            )
+        axis.set_title(DATASET_LABELS[dataset])
+        axis.set_xticks(x_positions, ["512", "1,024"])
+        axis.set_xlabel("Retrieved-token budget")
+        axis.set_ylim(0, 1)
+        axis.grid(axis="y", alpha=0.25)
+    axes[0].set_ylabel("Mean nDCG")
+    handles, labels = axes[-1].get_legend_handles_labels()
+    figure.legend(handles, labels, loc="lower center", ncol=4, frameon=False, bbox_to_anchor=(0.5, -0.05))
+    figure.suptitle("Document-level nDCG under common retrieved-token budgets", y=1.03)
+    figure.subplots_adjust(bottom=0.24, wspace=0.1)
+    return save_figure(figure, "figure4_token_budget_ndcg.png")
+
+
 def main() -> None:
     global OUTPUT_DIR
     parser = argparse.ArgumentParser(description=__doc__)
@@ -248,6 +295,7 @@ def main() -> None:
         create_ndcg_figure(read_descriptive_metrics()),
         create_footprint_figure(read_indexing_footprint()),
         create_significance_figure(read_significant_comparisons()),
+        create_token_budget_figure(read_token_budget_metrics()),
     ]
     for output in outputs:
         print(output)

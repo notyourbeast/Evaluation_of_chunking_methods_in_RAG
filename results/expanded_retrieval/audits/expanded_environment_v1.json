@@ -1,6 +1,6 @@
 {
-  "git_head_at_capture": "c07574c79dbfeb01d924fe62bdad2dec4d2cd384",
-  "git_status_porcelain_at_capture": "M data/manifests/expanded_study_protocol_v1.md\n?? model_not_included.txt\n?? results/figures/\n?? results/generation_quality.csv\n?? scripts/create_figures.py\n?? scripts/evaluate_generation_quality.py",
+  "git_head_at_capture": "41ca1c9e4a75b4e0413e6686b2b248a2a91a8e28",
+  "git_status_porcelain_at_capture": "M README.md\n M results/expanded_retrieval/analysis/figures/figure1_ndcg_by_collection.png\n M results/expanded_retrieval/analysis/figures/figure2_indexing_footprint.png\n M scripts/capture_expanded_reproducibility.py\n M scripts/create_expanded_retrieval_figures.py\n?? CITATION.cff\n?? model_not_included.txt\n?? results/expanded_retrieval/analysis/figures/figure2_experimental_workflow.svg\n?? results/expanded_retrieval/analysis/figures/figure4_token_budget_ndcg.png\n?? results/figures/\n?? results/generation_quality.csv\n?? scripts/create_figures.py\n?? scripts/evaluate_generation_quality.py",
   "machine": "arm64",
   "model": {
     "identifier": "sentence-transformers/all-MiniLM-L6-v2",

@@ -50,6 +50,11 @@ def tracked_paths() -> list[Path]:
         RESULTS_ROOT / "analysis" / "analysis_manifest.json",
         RESULTS_ROOT / "analysis" / "descriptive_metrics.csv",
         RESULTS_ROOT / "analysis" / "pairwise_comparisons.csv",
+        RESULTS_ROOT / "analysis" / "figures" / "figure1_ndcg_by_collection.png",
+        RESULTS_ROOT / "analysis" / "figures" / "figure2_experimental_workflow.svg",
+        RESULTS_ROOT / "analysis" / "figures" / "figure2_indexing_footprint.png",
+        RESULTS_ROOT / "analysis" / "figures" / "figure3_holm_significant_comparisons.png",
+        RESULTS_ROOT / "analysis" / "figures" / "figure4_token_budget_ndcg.png",
         RESULTS_ROOT / "efficiency_v2" / "benchmark_manifest.json",
         RESULTS_ROOT / "efficiency_v2" / "preparation_trials.csv",
         RESULTS_ROOT / "efficiency_v2" / "query_latency_trials.csv",
@@ -77,6 +82,7 @@ def tracked_paths() -> list[Path]:
         PROJECT_ROOT / "scripts" / "run_token_budget_retrieval.py",
         PROJECT_ROOT / "scripts" / "analyze_token_budget_retrieval.py",
         PROJECT_ROOT / "scripts" / "analyze_paired_randomisation_sensitivity.py",
+        PROJECT_ROOT / "scripts" / "create_expanded_retrieval_figures.py",
     ]
     for dataset in ("scifact", "nfcorpus", "arguana"):
         for strategy in ("fixed", "sentence", "semantic", "topic"):
